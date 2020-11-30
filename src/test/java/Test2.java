@@ -24,7 +24,7 @@ public class Test2 {
     private static File file;
 
     static {
-        file = new File("C:\\Development\\NeuralNetwork\\src\\test\\resources\\network.txt");
+        file = new File("C:\\Development\\NeuralNetwork\\src\\test\\resources\\network.txt"); // May want to use a relative path as it won't be present on any other machines (Likely).
 
         if (!file.exists()) {
             try {

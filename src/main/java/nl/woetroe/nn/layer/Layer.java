@@ -1,5 +1,6 @@
 package nl.woetroe.nn.layer;
 
+import nl.woetroe.nn.NeuralNetwork;
 import nl.woetroe.nn.function.activation.ActivationFunction;
 import nl.woetroe.nn.function.activation.SigmoidFunction;
 import nl.woetroe.nn.function.error.ErrorFunction;
@@ -9,7 +10,6 @@ import nl.woetroe.nn.neuron.Neuron;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
-
 /*
  * Copyright (C) 2020-2021, Wouter Kistemaker.
  * <p>
@@ -25,6 +25,11 @@ import java.util.List;
  * <p>
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+/**
+ * Represents a Layer of {@link Neuron neurons} that is part
+ * of the {@link NeuralNetwork}
  */
 public abstract class Layer implements Serializable {
 
@@ -42,6 +47,15 @@ public abstract class Layer implements Serializable {
     private final ActivationFunction activationFunction;
     private final ErrorFunction errorFunction;
 
+    /**
+     * Constructs a new {@link Layer}
+     * @param size amount of {@link Neuron neurons} this {@link Layer} (will) contain(s)
+     * @param withBias whether or not a bias-{@link Neuron neuron} should be included
+     * @param activationFunction activation function to be applied to the weighted sum
+     *                           in the process of feedforwarding
+     * @param errorFunction error function that is used to measure the discrepancy between
+     *                      the desired output and the actual output
+     */
     public Layer(int size, boolean withBias, ActivationFunction activationFunction, ErrorFunction errorFunction) {
         this.size = size;
         this.withBias = withBias;
@@ -50,14 +64,34 @@ public abstract class Layer implements Serializable {
         this.errorFunction = errorFunction == null ? DEFAULT_ERROR_FUNCTION : errorFunction;
     }
 
+    /**
+     * Constructs a new {@link Layer}
+     * @param size amount of {@link Neuron neurons} this {@link Layer} (will) contain(s)
+     * @param withBias whether or not a bias-{@link Neuron neuron} should be included
+     *
+     * @implNote This internally calls the {{@link #Layer(int, boolean, ActivationFunction, ErrorFunction)} main constructor}
+     * with default activation- and errorfunction.
+     */
     public Layer(int size, boolean withBias) {
         this(size, withBias, null, null);
     }
 
+    /**
+     * Constructs a new {@link Layer}
+     * @param size amount of {@link Neuron neurons} this {@link Layer} (will) contain(s)
+     *
+     * @implNote This internally calls the {{@link #Layer(int, boolean, ActivationFunction, ErrorFunction)} main constructor}
+     * without a bias-{@link Neuron} and default activation- and errorfunction.
+     */
     public Layer(int size) {
         this(size, false);
     }
 
+    /**
+     * Connects all the {@link Neuron neurons} in this {@link Layer}
+     * to all the {@link Neuron neurons} in the target {@link Layer}
+     * @param target layer to connect this layer with
+     */
     public void connectToLayer(Layer target) {
         for (Neuron t : target.getNeurons()) {
             for (Neuron n : neurons) {
@@ -70,26 +104,47 @@ public abstract class Layer implements Serializable {
         }
     }
 
+    /**
+     * @return the size of this {@link Layer}
+     */
     public int getSize() {
         return size;
     }
 
+    /**
+     * @return a list of all {@link Neuron neurons} in this {@link Layer}
+     */
     public List<Neuron> getNeurons() {
         return neurons;
     }
 
+    /**
+     * @return whether or not this {@link Layer} has a bias-{@link Neuron} or not
+     */
     public boolean hasBias() {
         return withBias;
     }
 
+    /**
+     * @return the bias-{@link Neuron neuron}
+     *
+     * @throws IllegalStateException - when this layer has no bias neuron
+     */
     public Neuron getBias() {
+        if (!hasBias()) throw new IllegalStateException();
         return BIAS;
     }
 
+    /**
+     * @return this {@link Layer layer's} {@link ActivationFunction}
+     */
     public ActivationFunction getActivationFunction() {
         return activationFunction;
     }
 
+    /**
+     * @return this {@link Layer layer's} {@link ErrorFunction}
+     */
     public ErrorFunction getErrorFunction() {
         return errorFunction;
     }

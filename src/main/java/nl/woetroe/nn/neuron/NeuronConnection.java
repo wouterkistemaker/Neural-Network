@@ -20,6 +20,13 @@ import java.io.Serializable;
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+/**
+ * Represents the connection between two neurons. This connection can be
+ * compared to the human brain's axons. A human brain expresses the value
+ * of certain neurons in brain activity, whereas this connection is given
+ * a weight that signals the importance of this connection
+ */
 public final class NeuronConnection implements Serializable {
 
     private static final long serialVersionUID = 5132579330613761051L;
@@ -27,24 +34,44 @@ public final class NeuronConnection implements Serializable {
     private final Neuron to;
     private double weight;
 
+    /**
+     * Constructs a new {@link NeuronConnection}
+     * @param from first neuron
+     * @param to second neuron
+     */
     public NeuronConnection(Neuron from, Neuron to) {
         this.from = from;
         this.to = to;
         this.weight = NetworkUtils.nextDouble();
     }
 
+    /**
+     * @return the second {@link Neuron}
+     */
     public Neuron getTo() {
         return to;
     }
 
+    /**
+     * @return the first {@link Neuron}
+     */
     public Neuron getFrom() {
         return from;
     }
 
+    /**
+     * @return the weight of this connection, which signals the
+     * importance of this {@link NeuronConnection}
+     */
     public double getWeight() {
         return weight;
     }
 
+    /**
+     * Helper-functions that changes the current weight
+     * of this {@link NeuronConnection}
+     * @param x adjustment of the weight
+     */
     public void adjustWeight(double x) {
         this.weight += x;
     }

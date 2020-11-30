@@ -1,6 +1,6 @@
 package nl.woetroe.nn.function.error;
 
-/**
+/*
  * Copyright (C) 2020-2021, Wouter Kistemaker.
  * <p>
  * This program is free software: you can redistribute it and/or modify

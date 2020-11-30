@@ -1,6 +1,6 @@
 package nl.woetroe.nn.function.activation;
 
-/**
+/*
  * Copyright (C) 2020-2021, Wouter Kistemaker.
  * <p>
  * This program is free software: you can redistribute it and/or modify
@@ -15,6 +15,12 @@ package nl.woetroe.nn.function.activation;
  * <p>
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+/**
+ * Represents the ReLu activation function
+ *
+ * @deprecated class, this is not implemented and therefore useless for now
  */
 @Deprecated
 public final class ReLuFunction implements ActivationFunction {

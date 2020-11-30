@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
+/*
  * Copyright (C) 2020-2021, Wouter Kistemaker.
  * <p>
  * This program is free software: you can redistribute it and/or modify

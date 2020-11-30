@@ -10,7 +10,7 @@ import nl.woetroe.nn.neuron.NeuronConnection;
 import java.io.*;
 import java.util.*;
 
-/**
+/*
  * Copyright (C) 2020-2021, Wouter Kistemaker.
  * <p>
  * This program is free software: you can redistribute it and/or modify
@@ -26,6 +26,9 @@ import java.util.*;
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * <p>
+ */
+
+/**
  * Class representing a multi-layer feedforward neural network.
  */
 public final class NeuralNetwork implements Serializable {

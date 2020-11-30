@@ -4,7 +4,7 @@ import nl.woetroe.nn.function.activation.ActivationFunction;
 import nl.woetroe.nn.function.error.ErrorFunction;
 import nl.woetroe.nn.neuron.Neuron;
 
-/**
+/*
  * Copyright (C) 2020-2021, Wouter Kistemaker.
  * <p>
  * This program is free software: you can redistribute it and/or modify

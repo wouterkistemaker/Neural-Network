@@ -6,7 +6,7 @@ import nl.woetroe.nn.neuron.Neuron;
 
 import java.util.Arrays;
 
-/**
+/*
  * Copyright (C) 2020-2021, Wouter Kistemaker.
  * <p>
  * This program is free software: you can redistribute it and/or modify

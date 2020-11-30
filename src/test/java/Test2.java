@@ -38,7 +38,7 @@ public class Test2 {
                 .withRandomStartValues()
                 .withInput(0.1, 0.2, 0.9).build();
 
-        final int resultEpochs = network.train(1000 * 1); // 1 second
+        final int resultEpochs = network.train(1000 * 30); // 30 seconds
 
         printData(network, resultEpochs);
 

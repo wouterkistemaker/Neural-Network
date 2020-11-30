@@ -20,7 +20,7 @@ A link to the documentation of this project will be uploaded in the near future.
 
 For further explanation about using this project, there is also a [wiki-page](https://github.com/wouterkistemaker/Neural-Network/wiki/Home)
 
-# Disclaimer
+## Disclaimer
 
 Last but not least, I tried my best to make everything work properly, but please be aware neural networks are a highly advanced topic and there might be flaws in the repository. I am not in any way responsible for errors, problems or any kind of complications related to this project. Usage of this project is completely at your own risk.
 

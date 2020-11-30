@@ -1,8 +1,15 @@
 import nl.woetroe.nn.NeuralNetwork;
+import nl.woetroe.nn.function.activation.SigmoidFunction;
+import nl.woetroe.nn.function.error.MeanSquaredFunction;
+import nl.woetroe.nn.layer.DenseLayer;
+import nl.woetroe.nn.layer.InputLayer;
 
 import java.io.File;
+import java.util.Arrays;
 
 public class Test {
+
+    // kinda crappy .. ?
 
     private static File file;
 
@@ -19,10 +26,37 @@ public class Test {
     }
 
     public static void main(String[] args) {
+       exec1();
+//        exec2();
+    }
+
+    private static void exec1() {
+        NeuralNetwork network = new NeuralNetwork.Builder(
+                new InputLayer(3),
+                new DenseLayer(2))
+                .withDenseLayer(new DenseLayer(10, false, new SigmoidFunction(), new MeanSquaredFunction()))
+                .withDenseLayer(new DenseLayer(5, false, new SigmoidFunction(), new MeanSquaredFunction()))
+                .withLearningRate(0.1)
+                .withTargetOutput(0.3, 0.8)
+                .withRandomStartValues()
+                .withInput(0.1, 0.2, 0.9).build();
+
+        for (int i = 0; i < 10000; i++) {
+            network.train();
+        }
+
+        System.out.println(network.getOutput());
+
+        network.saveNetwork(file);
+    }
+
+    private static void exec2() {
+
         NeuralNetwork network = NeuralNetwork.loadNetwork(file);
 
-        network.train();
-        System.out.println(network);
+        final double[] output = network.compute(0.6, 0.6, 0.1);
+
+        System.out.println(Arrays.toString(output));
     }
 
 //    public static void main(String[] args) {

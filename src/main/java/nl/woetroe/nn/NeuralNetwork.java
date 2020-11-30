@@ -11,7 +11,7 @@ import java.util.*;
 
 public final class NeuralNetwork implements Serializable {
 
-    private static final double DEFAULT_LEARNING_RATE = 0.5;
+    private static final double DEFAULT_LEARNING_RATE = 0.1;
     private static final long serialVersionUID = 2451752264370132969L;
 
     private final InputLayer inputLayer; // cannot be null
@@ -43,7 +43,6 @@ public final class NeuralNetwork implements Serializable {
     }
 
     /**
-     *
      * @param duration duration in milliseconds
      * @return amount of epochs the training completed
      */
@@ -65,6 +64,24 @@ public final class NeuralNetwork implements Serializable {
         feedForward();
         backPropagate();
         updateWeights();
+    }
+
+    /**
+     * Only feedforwards the input and returns the output, does
+     * not train the network but assumes that training has already
+     * been done
+     *
+     * @return the output of the network
+     */
+    public double[] compute(double... input){
+        if (inputLayer.getSize() != input.length){
+            throw new IllegalArgumentException();
+        }
+
+        inputLayer.changeInputValues(input);
+        feedForward();
+
+        return getOutput().stream().mapToDouble(Neuron::getValue).toArray();
     }
 
     public void saveNetwork(File file) {

@@ -26,5 +26,11 @@ public final class InputLayer extends Layer {
         Arrays.stream(input).forEach(i -> this.getNeurons().add(new Neuron(i)));
     }
 
+    public void changeInputValues(double... input){
+        for (int i = 0; i < input.length; i++) {
+            getNeurons().get(i).setValue(input[i]);
+        }
+    }
+
 
 }

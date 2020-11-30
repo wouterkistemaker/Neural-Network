@@ -1,0 +1,7 @@
+unnamed package
+nl.woetroe.nn
+nl.woetroe.nn.function.activation
+nl.woetroe.nn.function.error
+nl.woetroe.nn.layer
+nl.woetroe.nn.neuron
+nl.woetroe.nn.util

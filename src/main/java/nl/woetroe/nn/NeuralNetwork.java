@@ -1,5 +1,6 @@
 package nl.woetroe.nn;
 
+import nl.woetroe.nn.function.activation.ActivationFunction;
 import nl.woetroe.nn.layer.DenseLayer;
 import nl.woetroe.nn.layer.InputLayer;
 import nl.woetroe.nn.layer.Layer;
@@ -9,6 +10,9 @@ import nl.woetroe.nn.neuron.NeuronConnection;
 import java.io.*;
 import java.util.*;
 
+/**
+ * Class representing a multi-layer feedforward neural network.
+ */
 public final class NeuralNetwork implements Serializable {
 
     private static final double DEFAULT_LEARNING_RATE = 0.1;
@@ -38,6 +42,9 @@ public final class NeuralNetwork implements Serializable {
         this(inputLayer, outputLayer, DEFAULT_LEARNING_RATE, targetOutput);
     }
 
+    /**
+     * @return a list of all {@link Neuron neurons} from the {@link DenseLayer output-layer}
+     */
     public List<Neuron> getOutput() {
         return outputLayer.getNeurons();
     }
@@ -45,6 +52,7 @@ public final class NeuralNetwork implements Serializable {
     /**
      * @param duration duration in milliseconds
      * @return amount of epochs the training completed
+     * @see #train()
      */
     public int train(long duration) {
         final long now = System.currentTimeMillis();
@@ -60,6 +68,20 @@ public final class NeuralNetwork implements Serializable {
         return i;
     }
 
+    /**
+     * Runs a single training-cycle, which consists of three processes
+     *
+     * <ul>
+     *     <li>feed-forward - the network computes the input to an output</li>
+     *     <li>backpropagation - the network calculates the errors and signifies
+     *      * how the weights should change to get a more accurate output</li>
+     *     <li>updating the weights - the weights are actually adjusted</li>
+     * </ul>
+     *
+     * @see #feedForward()
+     * @see #backPropagate()
+     * @see #updateWeights()
+     */
     public void train() {
         feedForward();
         backPropagate();
@@ -73,8 +95,8 @@ public final class NeuralNetwork implements Serializable {
      *
      * @return the output of the network
      */
-    public double[] compute(double... input){
-        if (inputLayer.getSize() != input.length){
+    public double[] compute(double... input) {
+        if (inputLayer.getSize() != input.length) {
             throw new IllegalArgumentException();
         }
 
@@ -84,6 +106,12 @@ public final class NeuralNetwork implements Serializable {
         return getOutput().stream().mapToDouble(Neuron::getValue).toArray();
     }
 
+    /**
+     * Saves the entire network to a file, using the {@link java.io.Serializable}
+     * framework
+     *
+     * @param file file to save this class to
+     */
     public void saveNetwork(File file) {
         try (FileOutputStream stream = new FileOutputStream(file);
              ObjectOutputStream objectStream = new ObjectOutputStream(stream)) {
@@ -94,6 +122,12 @@ public final class NeuralNetwork implements Serializable {
         }
     }
 
+    /**
+     * Loads an instance of {@link NeuralNetwork} from a {@link File file}
+     *
+     * @param file file where a {@link NeuralNetwork neural network} is stored
+     * @return an instance of {@link NeuralNetwork}
+     */
     public static NeuralNetwork loadNetwork(File file) {
         try (FileInputStream stream = new FileInputStream(file);
              ObjectInputStream objectStream = new ObjectInputStream(stream)) {
@@ -108,6 +142,10 @@ public final class NeuralNetwork implements Serializable {
         }
     }
 
+    /**
+     * Internal function that prepares the network for usage
+     * and signals that it is ready for action
+     */
     private void ready() {
         if (ready) return;
         assert inputLayer != null;
@@ -122,6 +160,11 @@ public final class NeuralNetwork implements Serializable {
         this.ready = true;
     }
 
+    /**
+     * Connects all each {@link Layer} with the next {@link Layer}, so
+     * that all {@link Neuron neurons} are connected to
+     * {@link Neuron neurons} in the next {@link Layer}
+     */
     private void connect() {
         for (int i = 0; i < layers.size(); i++) {
             if (i + 1 >= layers.size()) return; // last layer
@@ -133,6 +176,19 @@ public final class NeuralNetwork implements Serializable {
         }
     }
 
+    /**
+     * Process of feeding forward the input values
+     * and computing an output value
+     * <p>
+     * This process takes the weighted sum of all previous {@link Neuron neurons} and
+     * their weights to the current neuron, after which the
+     * {@link ActivationFunction} of the current
+     * {@link Layer} is applied to the weighted sum. The result of this application
+     * is the final value of the current {@link Neuron}
+     *
+     * @see NeuronConnection
+     * @see ActivationFunction
+     */
     private void feedForward() {
         for (int i = 0; i < layers.size(); i++) {
             if (i + 1 >= layers.size()) return;
@@ -160,6 +216,17 @@ public final class NeuralNetwork implements Serializable {
         }
     }
 
+    /**
+     * Process of backpropagation. This is where the tough mathematics come in and
+     * it goes a little too far to explain this.
+     * <p>
+     * The necessary computations are done and the outcomes are stored in fields
+     * in the {@link Neuron neurons} because these outcomes are needed later in
+     * the {@link #updateWeights()} function.
+     * <p>
+     * This function could as well have been put together into one big function,
+     * but to preserve a clear overview, this has been split into two seperate methods.
+     */
     private void backPropagate() {
         for (int i = 0; i < outputLayer.getSize(); i++) {
             final Neuron neuron = outputLayer.getNeurons().get(i);
@@ -195,10 +262,29 @@ public final class NeuralNetwork implements Serializable {
         }
     }
 
+    /**
+     * Helper function that calls the {@link #updateWeights(boolean)} function
+     * <p>
+     * This is for testing purposes to see whether it would make a difference
+     * to update the weights forwards or backwards. This method hasn't yet been
+     * removed/simplified but this will probably happen soon in the future
+     *
+     * @see #updateWeights()
+     */
     private void updateWeights() {
         this.updateWeights(true);
     }
 
+    /**
+     * Helper function that calls the {@link #updateWeights(Layer, Layer)} function
+     * <p>
+     * This is for testing purposes to see whether it would make a difference
+     * to update the weights forwards or backwards. This method hasn't yet been
+     * removed/simplified but this will probably happen soon in the future
+     *
+     * @param forward whether or not to update the weights forward (false=backward)
+     * @see #updateWeights(Layer, Layer)
+     */
     private void updateWeights(boolean forward) {
         if (forward) {
             for (int i = 1; i < layers.size(); i++) {
@@ -218,6 +304,16 @@ public final class NeuralNetwork implements Serializable {
         }
     }
 
+    /**
+     * Process of updating the weights, based on the indications that
+     * were given in the process of {@link #backPropagate() backpropagation}
+     * <p>
+     * Again, the mathematics are too complex to explain here and one will
+     * just have to assume that this is correct
+     *
+     * @param layer    current layer that is involved in this process
+     * @param previous previous layer that is involved in this process
+     */
     private void updateWeights(Layer layer, Layer previous) {
         for (Neuron n : previous.getNeurons()) {
 
@@ -246,18 +342,30 @@ public final class NeuralNetwork implements Serializable {
         return builder.toString();
     }
 
+    /**
+     * @return a double array of the target output
+     */
     public double[] getTargetOutput() {
         return targetOutput;
     }
 
+    /**
+     * @return a string of the double array of the target output
+     */
     public String getTargetOutputString() {
         return Arrays.toString(getTargetOutput());
     }
 
+    /**
+     * @return a string of the input-neurons
+     */
     public String getInputString() {
         return inputLayer.getNeurons().toString();
     }
 
+    /**
+     * Builder class to create an instance of {@link NeuralNetwork}, self-explanatory
+     */
     public static class Builder {
 
         private final InputLayer inputLayer;
@@ -314,6 +422,12 @@ public final class NeuralNetwork implements Serializable {
             return this;
         }
 
+        /**
+         * Constructs an instance of {@link NeuralNetwork}
+         *
+         * @return an instance of {@link NeuralNetwork}
+         * @throws IllegalStateException - when targetOutput or input is null
+         */
         public NeuralNetwork build() {
             if (targetOutput == null || this.input == null) {
                 throw new IllegalStateException();

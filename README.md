@@ -16,7 +16,7 @@ Contributions are always welcome. Documentation on how to contribute to this pro
 
 ## Documentation
 
-A link to the documentation of this project will be uploaded in the near future. While this documentation also isn't done yet, for now it can be found in the comments in the source-code files.
+The documentation can be found [here](https://wouterkistemaker.github.io/Neural-Network/) but isn't complete yet. I will try to finish this as soon as possible.
 
 For further explanation about using this project, there is also a [wiki-page](https://github.com/wouterkistemaker/Neural-Network/wiki/Home)
 

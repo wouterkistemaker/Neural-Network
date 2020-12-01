@@ -22,6 +22,11 @@ import java.util.Set;
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+/**
+ * Represents an artificial neuron, vaguely related to the biological neuron
+ * found in a human brain
+ */
 public final class Neuron implements Serializable {
 
     private static final long serialVersionUID = 4240182149384801865L;
@@ -31,6 +36,10 @@ public final class Neuron implements Serializable {
 
     private double delta;
 
+    /**
+     * Constructs a new Neuron with a given value
+     * @param value
+     */
     public Neuron(double value) {
         this.value = value;
         this.connections = new HashSet<>();

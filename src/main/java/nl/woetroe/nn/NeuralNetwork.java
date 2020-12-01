@@ -225,7 +225,7 @@ public final class NeuralNetwork implements Serializable {
                 if (current.hasBias()) {
                     final Neuron bias = current.getBias();
 
-                    sum += bias.getConnectionWith(nextNeuron).getWeight(); // value is always 1 so we can just add the weight of the connection here
+                    sum += bias.getValue(); // value is always 1 so we can just add the weight of the connection here ... (?)
                 }
 
                 final double result = next.getActivationFunction().apply(sum);
@@ -247,6 +247,9 @@ public final class NeuralNetwork implements Serializable {
      */
     private void backPropagate() {
         for (int i = 0; i < outputLayer.getSize(); i++) {
+
+            // Output-layer backpropagation differs from the hidden layers
+
             final Neuron neuron = outputLayer.getNeurons().get(i);
 
             final double value = neuron.getValue();
@@ -344,6 +347,11 @@ public final class NeuralNetwork implements Serializable {
                 final double deltaWeight = -learningRate * delta * previousOutput;
 
                 connection.adjustWeight(deltaWeight);
+
+                if (layer.hasBias()) { // might not work,
+                    final double deltaBias = -learningRate * delta;
+                    layer.getBias().adjustValue(deltaBias);
+                }
             }
         }
     }

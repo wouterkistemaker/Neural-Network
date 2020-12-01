@@ -49,12 +49,13 @@ public abstract class Layer implements Serializable {
 
     /**
      * Constructs a new {@link Layer}
-     * @param size amount of {@link Neuron neurons} this {@link Layer} (will) contain(s)
-     * @param withBias whether or not a bias-{@link Neuron neuron} should be included
+     *
+     * @param size               amount of {@link Neuron neurons} this {@link Layer} (will) contain(s)
+     * @param withBias           whether or not a bias-{@link Neuron neuron} should be included
      * @param activationFunction activation function to be applied to the weighted sum
      *                           in the process of feedforwarding
-     * @param errorFunction error function that is used to measure the discrepancy between
-     *                      the desired output and the actual output
+     * @param errorFunction      error function that is used to measure the discrepancy between
+     *                           the desired output and the actual output
      */
     public Layer(int size, boolean withBias, ActivationFunction activationFunction, ErrorFunction errorFunction) {
         this.size = size;
@@ -66,9 +67,9 @@ public abstract class Layer implements Serializable {
 
     /**
      * Constructs a new {@link Layer}
-     * @param size amount of {@link Neuron neurons} this {@link Layer} (will) contain(s)
-     * @param withBias whether or not a bias-{@link Neuron neuron} should be included
      *
+     * @param size     amount of {@link Neuron neurons} this {@link Layer} (will) contain(s)
+     * @param withBias whether or not a bias-{@link Neuron neuron} should be included
      * @implNote This internally calls the {{@link #Layer(int, boolean, ActivationFunction, ErrorFunction)} main constructor}
      * with default activation- and errorfunction.
      */
@@ -78,8 +79,8 @@ public abstract class Layer implements Serializable {
 
     /**
      * Constructs a new {@link Layer}
-     * @param size amount of {@link Neuron neurons} this {@link Layer} (will) contain(s)
      *
+     * @param size amount of {@link Neuron neurons} this {@link Layer} (will) contain(s)
      * @implNote This internally calls the {{@link #Layer(int, boolean, ActivationFunction, ErrorFunction)} main constructor}
      * without a bias-{@link Neuron} and default activation- and errorfunction.
      */
@@ -90,6 +91,7 @@ public abstract class Layer implements Serializable {
     /**
      * Connects all the {@link Neuron neurons} in this {@link Layer}
      * to all the {@link Neuron neurons} in the target {@link Layer}
+     *
      * @param target layer to connect this layer with
      */
     public void connectToLayer(Layer target) {
@@ -105,6 +107,8 @@ public abstract class Layer implements Serializable {
     }
 
     /**
+     * The amount of {@link Neuron neurons} in this layer
+     *
      * @return the size of this {@link Layer}
      */
     public int getSize() {
@@ -112,22 +116,27 @@ public abstract class Layer implements Serializable {
     }
 
     /**
-     * @return a list of all {@link Neuron neurons} in this {@link Layer}
+     * Returns a {@link List<Neuron>} of {@link Neuron neurons} in this {@link Layer}
+     *
+     * @return a {@link List<Neuron>} of {@link Neuron neurons} in this {@link Layer}
      */
     public List<Neuron> getNeurons() {
         return neurons;
     }
 
     /**
-     * @return whether or not this {@link Layer} has a bias-{@link Neuron} or not
+     * Returns whether or not this {@link Layer} has a bias-{@link Neuron neuron} or not
+     *
+     * @return whether or not this {@link Layer} has a bias-{@link Neuron neuron} or not
      */
     public boolean hasBias() {
         return withBias;
     }
 
     /**
-     * @return the bias-{@link Neuron neuron}
+     * Returns the bias-{@link Neuron neuron} in this {@link Layer}
      *
+     * @return the bias-{@link Neuron neuron} in this {@link Layer}
      * @throws IllegalStateException - when this layer has no bias neuron
      */
     public Neuron getBias() {
@@ -136,14 +145,18 @@ public abstract class Layer implements Serializable {
     }
 
     /**
-     * @return this {@link Layer layer's} {@link ActivationFunction}
+     * Returns the {@link ActivationFunction} of this {@link Layer}
+     *
+     * @return the {@link ActivationFunction} of this {@link Layer}
      */
     public ActivationFunction getActivationFunction() {
         return activationFunction;
     }
 
     /**
-     * @return this {@link Layer layer's} {@link ErrorFunction}
+     * Returns the {@link ErrorFunction} of this {@link Layer}
+     *
+     * @return the {@link ErrorFunction} of this {@link Layer}
      */
     public ErrorFunction getErrorFunction() {
         return errorFunction;

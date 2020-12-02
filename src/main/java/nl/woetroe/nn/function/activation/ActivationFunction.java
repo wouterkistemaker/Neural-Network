@@ -20,6 +20,13 @@ import java.util.function.Function;
 /**
  * Represents an activation function that as applied to the weighted sum
  * in the process of feedforwarding.
+ *
+ * @implNote It is important to notice that the choice of the activation function has
+ * a huge impact on the outcome of the network. One has to understand that a network,
+ * that uses the Sigmoid activation function, can never be trained to give an output
+ * of 6, or -73, because after application of the AF, the outcome will always lay between 0 and 1.
+ *
+ *
  */
 public interface ActivationFunction extends Function<Double, Double>, Serializable {
 

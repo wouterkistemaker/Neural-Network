@@ -243,7 +243,7 @@ public final class NeuralNetwork implements Serializable {
      * the {@link #updateWeights()} function.
      * <p>
      * This function could as well have been put together into one big function,
-     * but to preserve a clear overview, this has been split into two seperate methods.
+     * but to preserve a clear overview, this has been split into two separate methods.
      */
     private void backPropagate() {
         for (int i = 0; i < outputLayer.getSize(); i++) {
@@ -348,12 +348,14 @@ public final class NeuralNetwork implements Serializable {
 
                 connection.adjustWeight(deltaWeight);
 
-                if (layer.hasBias()) { // might not work,
+                if (layer.hasBias()) { // might not work, attempt to resolve #1 probably doesn't work yet
                     final double deltaBias = -learningRate * delta;
                     layer.getBias().adjustValue(deltaBias);
                 }
             }
         }
+
+        System.out.println("Updating weights from layer " + layers.indexOf(layer) + " with respect to previous layer " + layers.indexOf(previous));
     }
 
     @Override

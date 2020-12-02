@@ -22,7 +22,7 @@ All issues, active progress and things to be done can all be found on the [proje
 
 The documentation can be found [here](https://wouterkistemaker.github.io/Neural-Network/) but isn't complete yet. I will try to finish this as soon as possible.
 
-For further explanation about using this project, there is also a [wiki-page](https://github.com/wouterkistemaker/Neural-Network/wiki/Home)
+For further explanation about using this project, there is also a [wiki-page](https://github.com/wouterkistemaker/Neural-Network/wiki/Home). It is highly recommended to read the wiki-page, especially [this](https://github.com/wouterkistemaker/Neural-Network/wiki/%5B1%5D-Explanation-of-important-aspects) one.
 
 ## Disclaimer
 

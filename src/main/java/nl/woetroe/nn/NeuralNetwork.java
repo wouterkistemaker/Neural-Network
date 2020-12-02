@@ -111,6 +111,7 @@ public final class NeuralNetwork implements Serializable {
      * not train the network but assumes that training has already
      * been done
      *
+     * @param input the input values to compute an output with
      * @return the output of the network
      */
     public double[] compute(double... input) {

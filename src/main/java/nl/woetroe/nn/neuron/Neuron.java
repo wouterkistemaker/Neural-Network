@@ -38,7 +38,7 @@ public final class Neuron implements Serializable {
 
     /**
      * Constructs a new Neuron with a given value
-     * @param value
+     * @param value value of the neuron
      */
     public Neuron(double value) {
         this.value = value;

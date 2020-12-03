@@ -1,5 +1,6 @@
 package nl.woetroe.nn.layer;
 
+import nl.woetroe.nn.function.InitializationType;
 import nl.woetroe.nn.function.activation.ActivationFunction;
 import nl.woetroe.nn.function.error.ErrorFunction;
 import nl.woetroe.nn.neuron.Neuron;
@@ -46,6 +47,16 @@ public final class DenseLayer extends Layer {
     public void fillRandom(double lowerBound, double upperBound){
         for (int i = 0; i < getSize(); i++) {
             getNeurons().add(new Neuron(NetworkUtils.nextDouble(lowerBound, upperBound)));
+        }
+    }
+
+    public void initWeights(InitializationType type){
+        if (type == InitializationType.RANDOM){
+            fillRandom();
+        } else if (type == InitializationType.BORDERED){
+            // implement
+        } else {
+            // implement
         }
     }
 }

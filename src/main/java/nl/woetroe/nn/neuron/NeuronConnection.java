@@ -36,8 +36,22 @@ public final class NeuronConnection implements Serializable {
 
     /**
      * Constructs a new {@link NeuronConnection}
+     *
      * @param from first neuron
-     * @param to second neuron
+     * @param to   second neuron
+     * @param weight weight of the connection (importance)
+     */
+    public NeuronConnection(Neuron from, Neuron to, double weight) {
+        this.from = from;
+        this.to = to;
+        this.weight = weight;
+    }
+
+    /**
+     * Constructs a new {@link NeuronConnection}
+     *
+     * @param from first neuron
+     * @param to   second neuron
      */
     public NeuronConnection(Neuron from, Neuron to) {
         this.from = from;
@@ -70,6 +84,7 @@ public final class NeuronConnection implements Serializable {
     /**
      * Helper-functions that changes the current weight
      * of this {@link NeuronConnection}
+     *
      * @param x adjustment of the weight
      */
     public void adjustWeight(double x) {

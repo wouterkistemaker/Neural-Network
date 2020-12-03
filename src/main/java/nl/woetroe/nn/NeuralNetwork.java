@@ -4,6 +4,7 @@ import nl.woetroe.nn.function.activation.ActivationFunction;
 import nl.woetroe.nn.layer.DenseLayer;
 import nl.woetroe.nn.layer.InputLayer;
 import nl.woetroe.nn.layer.Layer;
+import nl.woetroe.nn.neuron.BiasNeuron;
 import nl.woetroe.nn.neuron.Neuron;
 import nl.woetroe.nn.neuron.NeuronConnection;
 
@@ -111,6 +112,7 @@ public final class NeuralNetwork implements Serializable {
      * not train the network but assumes that training has already
      * been done
      *
+     * @param input the input values to compute an output with
      * @return the output of the network
      */
     public double[] compute(double... input) {
@@ -223,9 +225,9 @@ public final class NeuralNetwork implements Serializable {
                 }
 
                 if (current.hasBias()) {
-                    final Neuron bias = current.getBias();
+                    final BiasNeuron bias = current.getBias();
 
-                    sum += bias.getValue(); // value is always 1 so we can just add the weight of the connection here ... (?)
+                    sum += bias.getWeight(); // value is always 1 so we can just add the weight of the connection here
                 }
 
                 final double result = next.getActivationFunction().apply(sum);
@@ -243,7 +245,7 @@ public final class NeuralNetwork implements Serializable {
      * the {@link #updateWeights()} function.
      * <p>
      * This function could as well have been put together into one big function,
-     * but to preserve a clear overview, this has been split into two seperate methods.
+     * but to preserve a clear overview, this has been split into two separate methods.
      */
     private void backPropagate() {
         for (int i = 0; i < outputLayer.getSize(); i++) {
@@ -321,7 +323,6 @@ public final class NeuralNetwork implements Serializable {
 
                 this.updateWeights(next, layer);
             }
-
         }
     }
 
@@ -348,9 +349,11 @@ public final class NeuralNetwork implements Serializable {
 
                 connection.adjustWeight(deltaWeight);
 
-                if (layer.hasBias()) { // might not work,
-                    final double deltaBias = -learningRate * delta;
-                    layer.getBias().adjustValue(deltaBias);
+                if (layer.hasBias()) { // might not work, attempt to resolve #1 probably doesn't work yet
+//                    final double deltaBias = -learningRate * delta;
+//                    layer.getBias().adjustValue(deltaBias);
+
+                    layer.getBias().adjustWeight(-learningRate * delta);
                 }
             }
         }
@@ -399,8 +402,6 @@ public final class NeuralNetwork implements Serializable {
         private final DenseLayer outputLayer;
 
         private double learningRate;
-        private double fixedStaringValue;
-        private boolean randomStartingValues = true;
 
         private double[] input;
         private double[] targetOutput;
@@ -429,17 +430,6 @@ public final class NeuralNetwork implements Serializable {
             return this;
         }
 
-        public Builder withRandomStartValues() {
-            this.randomStartingValues = true;
-            return this;
-        }
-
-        public Builder withFixedStartValue(double d) {
-            this.randomStartingValues = false;
-            this.fixedStaringValue = d;
-            return this;
-        }
-
         public Builder withTargetOutput(double... doubles) {
             if (outputLayer.getSize() != doubles.length) {
                 throw new IllegalArgumentException();
@@ -463,13 +453,8 @@ public final class NeuralNetwork implements Serializable {
             network.inputLayer.setInput(this.input);
             network.denseLayers.addAll(hiddenLayers);
 
-            if (randomStartingValues) {
-                network.denseLayers.forEach(DenseLayer::fillRandom);
-                network.outputLayer.fillRandom();
-            } else {
-                network.denseLayers.forEach(d -> d.fillFixed(fixedStaringValue));
-                network.outputLayer.fillFixed(fixedStaringValue);
-            }
+            network.denseLayers.forEach(DenseLayer::fillRandom);
+            network.outputLayer.fillRandom();
 
             network.ready();
             return network;

@@ -3,6 +3,7 @@ package nl.woetroe.nn.layer;
 import nl.woetroe.nn.function.activation.ActivationFunction;
 import nl.woetroe.nn.function.error.ErrorFunction;
 import nl.woetroe.nn.neuron.Neuron;
+import nl.woetroe.nn.util.NetworkUtils;
 
 /*
  * Copyright (C) 2020-2021, Wouter Kistemaker.
@@ -32,21 +33,19 @@ public final class DenseLayer extends Layer {
         super(size, withBias);
     }
 
-
     public DenseLayer(int size) {
         super(size);
-    }
-
-    public void fillFixed(double value) {
-        for (int i = 0; i < getSize(); i++) {
-            getNeurons().add(new Neuron(value));
-        }
     }
 
     public void fillRandom() {
         for (int i = 0; i < getSize(); i++) {
             getNeurons().add(new Neuron());
+        }
+    }
 
+    public void fillRandom(double lowerBound, double upperBound){
+        for (int i = 0; i < getSize(); i++) {
+            getNeurons().add(new Neuron(NetworkUtils.nextDouble(lowerBound, upperBound)));
         }
     }
 }

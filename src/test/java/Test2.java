@@ -36,8 +36,8 @@ public class Test2 {
     }
 
     public static void main(String[] args) {
-//        exec1();
-        exec2();
+        exec1();
+//        exec2();
     }
 
     private static void exec1() {
@@ -48,7 +48,6 @@ public class Test2 {
                 .withDenseLayer(new DenseLayer(5, false, new SigmoidFunction(), new MeanSquaredFunction()))
                 .withLearningRate(0.01)
                 .withTargetOutput(0.3, 0.8)
-                .withRandomStartValues()
                 .withInput(0.1, 0.2, 0.9).build();
 
         final int resultEpochs = network.train(1000 * 30); // 30 seconds

@@ -54,7 +54,6 @@ public class Test {
                 .withDenseLayer(new DenseLayer(5, false, new SigmoidFunction(), new MeanSquaredFunction()))
                 .withLearningRate(0.1)
                 .withTargetOutput(0.3, 0.8)
-                .withRandomStartValues()
                 .withInput(0.1, 0.2, 0.9).build();
 
         for (int i = 0; i < 10000; i++) {

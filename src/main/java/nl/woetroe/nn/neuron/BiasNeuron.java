@@ -2,6 +2,8 @@ package nl.woetroe.nn.neuron;
 
 import nl.woetroe.nn.util.NetworkUtils;
 
+import java.util.Set;
+
 /*
   Copyright (C) 2020-2021, Wouter Kistemaker.
   This program is free software: you can redistribute it and/or modify
@@ -39,5 +41,32 @@ public final class BiasNeuron extends Neuron {
 
     public void setWeight(double weight) {
         this.weight = weight;
+    }
+
+    @Override
+    public Set<NeuronConnection> getConnections() {
+        throw new IllegalStateException();
+    }
+
+    @Override
+    public NeuronConnection getConnectionWith(Neuron target) {
+        throw new IllegalStateException();
+    }
+
+    @Override
+    public void adjustValue(double x) {
+        throw new IllegalStateException();
+    }
+
+    @Override
+    public void setValue(double value) {
+        throw new IllegalStateException();
+    }
+
+    @Override
+    public String toString() {
+        return "BiasNeuron{" +
+            "weight=" + weight +
+            '}';
     }
 }

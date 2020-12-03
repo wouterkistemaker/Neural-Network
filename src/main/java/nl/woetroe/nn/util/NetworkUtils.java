@@ -1,6 +1,7 @@
 package nl.woetroe.nn.util;
 
 import java.security.SecureRandom;
+import java.util.concurrent.ThreadLocalRandom;
 
 /*
  * Copyright (C) 2020-2021, Wouter Kistemaker.
@@ -27,5 +28,9 @@ public final class NetworkUtils {
 
     public static double nextDouble() {
         return random.nextDouble();
+    }
+
+    public static double nextDouble(double lowerBound, double upperBound) {
+        return ThreadLocalRandom.current().nextDouble(lowerBound, upperBound);
     }
 }

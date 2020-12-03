@@ -5,6 +5,7 @@ import nl.woetroe.nn.function.activation.ActivationFunction;
 import nl.woetroe.nn.function.activation.SigmoidFunction;
 import nl.woetroe.nn.function.error.ErrorFunction;
 import nl.woetroe.nn.function.error.MeanSquaredFunction;
+import nl.woetroe.nn.neuron.BiasNeuron;
 import nl.woetroe.nn.neuron.Neuron;
 
 import java.io.Serializable;
@@ -36,7 +37,7 @@ public abstract class Layer implements Serializable {
     private static final ActivationFunction DEFAULT_ACTIVATION_FUNCTION = new SigmoidFunction();
     private static final ErrorFunction DEFAULT_ERROR_FUNCTION = new MeanSquaredFunction();
 
-    private static final Neuron BIAS = new Neuron(true);
+    private static final Neuron BIAS = new BiasNeuron();
     private static final long serialVersionUID = -7022757345368501174L;
 
     private final int size;

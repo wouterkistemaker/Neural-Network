@@ -27,12 +27,11 @@ import java.util.Set;
  * Represents an artificial neuron, vaguely related to the biological neuron
  * found in a human brain
  */
-public final class Neuron implements Serializable {
+public class Neuron implements Serializable {
 
     private static final long serialVersionUID = 4240182149384801865L;
     private double value;
     private final Set<NeuronConnection> connections;
-    private boolean isBiasNeuron = false;
 
     private double delta;
 
@@ -47,11 +46,6 @@ public final class Neuron implements Serializable {
 
     public Neuron() {
         this(NetworkUtils.nextDouble());
-    }
-
-    public Neuron(boolean isBiasNeuron) {
-        this(isBiasNeuron ? 1 : NetworkUtils.nextDouble());
-        this.isBiasNeuron = isBiasNeuron;
     }
 
     public void connect(Neuron t) {
@@ -70,10 +64,6 @@ public final class Neuron implements Serializable {
         return value;
     }
 
-    public boolean isBiasNeuron() {
-        return isBiasNeuron;
-    }
-
     public void adjustValue(double x) {
         value += x;
     }
@@ -87,7 +77,6 @@ public final class Neuron implements Serializable {
         return "Neuron{" +
             "value=" + value +
             ", connections=" + connections +
-            ", isBiasNeuron=" + isBiasNeuron +
             ", delta=" + delta +
             '}';
     }

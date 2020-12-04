@@ -1,8 +1,8 @@
 unnamed package
 nl.woetroe.nn
-nl.woetroe.nn.function
 nl.woetroe.nn.function.activation
 nl.woetroe.nn.function.error
+nl.woetroe.nn.function.initialization
 nl.woetroe.nn.layer
 nl.woetroe.nn.neuron
 nl.woetroe.nn.util

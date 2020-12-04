@@ -1,4 +1,11 @@
-package nl.woetroe.nn.function;/*
+package nl.woetroe.nn.function.initialization;
+
+import nl.woetroe.nn.neuron.NeuronConnection;
+import nl.woetroe.nn.util.NetworkUtils;
+
+import java.util.Set;
+
+/*
   Copyright (C) 2020-2021, Wouter Kistemaker.
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published
@@ -12,8 +19,18 @@ package nl.woetroe.nn.function;/*
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-public enum InitializationType {
+public final class BorderedRandomInitialization implements InitializationFunction {
 
-    XAVIER, RANDOM, BORDERED
+    private final double lowerBound;
+    private final double upperBound;
 
+    public BorderedRandomInitialization(double lowerBound, double upperBound) {
+        this.lowerBound = lowerBound;
+        this.upperBound = upperBound;
+    }
+
+    @Override
+    public void initialize(Set<NeuronConnection> connections) {
+        connections.forEach(c -> c.setWeight(NetworkUtils.nextDouble(lowerBound, upperBound)));
+    }
 }

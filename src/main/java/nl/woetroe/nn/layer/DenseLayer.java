@@ -1,8 +1,8 @@
 package nl.woetroe.nn.layer;
 
-import nl.woetroe.nn.function.InitializationType;
 import nl.woetroe.nn.function.activation.ActivationFunction;
 import nl.woetroe.nn.function.error.ErrorFunction;
+import nl.woetroe.nn.function.initialization.InitializationFunction;
 import nl.woetroe.nn.neuron.Neuron;
 import nl.woetroe.nn.util.NetworkUtils;
 
@@ -26,8 +26,28 @@ public final class DenseLayer extends Layer {
 
     private static final long serialVersionUID = -4158063030455588345L;
 
-    public DenseLayer(int size, boolean withBias, ActivationFunction activationFunction, ErrorFunction errorFunction) {
-        super(size, withBias, activationFunction, errorFunction);
+    public DenseLayer(int size, boolean withBias, InitializationFunction initializationFunction,  ActivationFunction activationFunction, ErrorFunction errorFunction) {
+        super(size, withBias, initializationFunction, activationFunction, errorFunction);
+    }
+
+    public DenseLayer(int size, boolean withBias, InitializationFunction initializationFunction, ActivationFunction activationFunction) {
+        this(size, withBias, initializationFunction, activationFunction, null);
+    }
+
+    public DenseLayer(int size, boolean withBias, InitializationFunction initializationFunction, ErrorFunction errorFunction) {
+        this(size, withBias, initializationFunction, null, errorFunction);
+    }
+
+    public DenseLayer(int size, boolean withBias, ActivationFunction initializationFunction, ErrorFunction errorFunction) {
+        this(size, withBias, null, initializationFunction, errorFunction);
+    }
+
+    public DenseLayer(int size, boolean withBias, ActivationFunction activationFunction) {
+        this(size, withBias, null, activationFunction, null);
+    }
+
+    public DenseLayer(int size, boolean withBias, ErrorFunction errorFunction) {
+        this(size, withBias, null, null, errorFunction);
     }
 
     public DenseLayer(int size, boolean withBias) {
@@ -44,19 +64,10 @@ public final class DenseLayer extends Layer {
         }
     }
 
-    public void fillRandom(double lowerBound, double upperBound){
+    public void fillRandom(double lowerBound, double upperBound) {
         for (int i = 0; i < getSize(); i++) {
             getNeurons().add(new Neuron(NetworkUtils.nextDouble(lowerBound, upperBound)));
         }
     }
 
-    public void initWeights(InitializationType type){
-        if (type == InitializationType.RANDOM){
-            fillRandom();
-        } else if (type == InitializationType.BORDERED){
-            // implement
-        } else {
-            // implement
-        }
-    }
 }

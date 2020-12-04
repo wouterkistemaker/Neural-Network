@@ -1,7 +1,7 @@
 package nl.woetroe.nn;
 
-import nl.woetroe.nn.function.InitializationType;
 import nl.woetroe.nn.function.activation.ActivationFunction;
+import nl.woetroe.nn.function.initialization.InitializationFunction;
 import nl.woetroe.nn.layer.DenseLayer;
 import nl.woetroe.nn.layer.InputLayer;
 import nl.woetroe.nn.layer.Layer;
@@ -11,6 +11,7 @@ import nl.woetroe.nn.neuron.NeuronConnection;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /*
  * Copyright (C) 2020-2021, Wouter Kistemaker.
@@ -36,14 +37,13 @@ import java.util.*;
 public final class NeuralNetwork implements Serializable {
 
     private static final double DEFAULT_LEARNING_RATE = 0.1;
-    private static final InitializationType DEFAULT_INIT_TYPE = InitializationType.RANDOM;
     private static final long serialVersionUID = 2451752264370132969L;
 
     private final InputLayer inputLayer; // cannot be null
     private final Set<DenseLayer> denseLayers; // can be null
     private final DenseLayer outputLayer; // cannot be null
 
-    private final InitializationType initializationType;
+    private final InitializationFunction initializationFunction;
     private final double learningRate;
     private final double[] targetOutput;
 
@@ -51,10 +51,10 @@ public final class NeuralNetwork implements Serializable {
 
     private boolean ready;
 
-    private NeuralNetwork(InputLayer inputLayer, DenseLayer outputLayer, InitializationType type, double learningRate, double... targetOutput) {
+    private NeuralNetwork(InputLayer inputLayer, DenseLayer outputLayer, InitializationFunction type, double learningRate, double... targetOutput) {
         this.inputLayer = inputLayer;
         this.outputLayer = outputLayer;
-        this.initializationType = type == null ? DEFAULT_INIT_TYPE : type;
+        this.initializationFunction = type;
         this.learningRate = learningRate;
         this.targetOutput = targetOutput;
         this.denseLayers = new HashSet<>();
@@ -62,7 +62,7 @@ public final class NeuralNetwork implements Serializable {
     }
 
     private NeuralNetwork(InputLayer inputLayer, DenseLayer outputLayer, double learningRate, double... targetOutput) {
-        this(inputLayer, outputLayer, DEFAULT_INIT_TYPE, learningRate, targetOutput);
+        this(inputLayer, outputLayer, null, learningRate, targetOutput);
     }
 
     private NeuralNetwork(InputLayer inputLayer, DenseLayer outputLayer, double... targetOutput) {
@@ -368,6 +368,25 @@ public final class NeuralNetwork implements Serializable {
         }
     }
 
+    @Deprecated // to be removed, testing only
+    public void printWeights() {
+
+        StringBuilder builder = new StringBuilder();
+        layers.forEach(layer -> {
+
+            Set<Set<NeuronConnection>> set = layer.getNeurons().stream().map(Neuron::getConnections).collect(Collectors.toSet());
+
+            set.forEach(s -> {
+
+                double[] weights = s.stream().mapToDouble(NeuronConnection::getWeight).toArray();
+                builder.append(Arrays.toString(weights)).append("\n");
+            });
+        });
+
+        System.out.println(builder.toString());
+
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -408,8 +427,8 @@ public final class NeuralNetwork implements Serializable {
      * @return the type of initialization that this network uses to determine
      * the first weights
      */
-    public InitializationType getInitializationType() {
-        return initializationType;
+    public InitializationFunction getInitializationFunction() {
+        return initializationFunction;
     }
 
     /**
@@ -421,7 +440,7 @@ public final class NeuralNetwork implements Serializable {
         private final Set<DenseLayer> hiddenLayers;
         private final DenseLayer outputLayer;
 
-        private InitializationType type;
+        private InitializationFunction initFunction;
         private double learningRate;
 
         private double[] input;
@@ -459,8 +478,8 @@ public final class NeuralNetwork implements Serializable {
             return this;
         }
 
-        public Builder withInitType(InitializationType type){
-            this.type=type;
+        public Builder withInitType(InitializationFunction type) {
+            this.initFunction = type;
             return this;
         }
 
@@ -475,7 +494,7 @@ public final class NeuralNetwork implements Serializable {
                 throw new IllegalStateException();
             }
 
-            final NeuralNetwork network = new NeuralNetwork(inputLayer, outputLayer, type, learningRate, targetOutput);
+            final NeuralNetwork network = new NeuralNetwork(inputLayer, outputLayer, initFunction, learningRate, targetOutput);
             network.inputLayer.setInput(this.input);
             network.denseLayers.addAll(hiddenLayers);
 

@@ -5,6 +5,8 @@ import nl.woetroe.nn.function.activation.ActivationFunction;
 import nl.woetroe.nn.function.activation.SigmoidFunction;
 import nl.woetroe.nn.function.error.ErrorFunction;
 import nl.woetroe.nn.function.error.MeanSquaredFunction;
+import nl.woetroe.nn.function.initialization.InitializationFunction;
+import nl.woetroe.nn.function.initialization.RandomInitialization;
 import nl.woetroe.nn.neuron.BiasNeuron;
 import nl.woetroe.nn.neuron.Neuron;
 
@@ -29,11 +31,16 @@ import java.util.List;
  */
 
 /**
+ * TODO fix javadoc in this class
+ */
+
+/**
  * Represents a Layer of {@link Neuron neurons} that is part
  * of the {@link NeuralNetwork}
  */
 public abstract class Layer implements Serializable {
 
+    private static final InitializationFunction DEFAULT_INITIALIZATION_FUNCTION = new RandomInitialization();
     private static final ActivationFunction DEFAULT_ACTIVATION_FUNCTION = new SigmoidFunction();
     private static final ErrorFunction DEFAULT_ERROR_FUNCTION = new MeanSquaredFunction();
 
@@ -45,6 +52,7 @@ public abstract class Layer implements Serializable {
     private final List<Neuron> neurons;
 
     // functions
+    private final InitializationFunction initializationFunction;
     private final ActivationFunction activationFunction;
     private final ErrorFunction errorFunction;
 
@@ -58,31 +66,33 @@ public abstract class Layer implements Serializable {
      * @param errorFunction      error function that is used to measure the discrepancy between
      *                           the desired output and the actual output
      */
-    public Layer(int size, boolean withBias, ActivationFunction activationFunction, ErrorFunction errorFunction) {
+    public Layer(int size, boolean withBias, InitializationFunction initializationFunction, ActivationFunction activationFunction, ErrorFunction errorFunction) {
         this.size = size;
         this.withBias = withBias;
         this.neurons = new LinkedList<>();
+        this.initializationFunction = initializationFunction == null ? DEFAULT_INITIALIZATION_FUNCTION : initializationFunction;
         this.activationFunction = activationFunction == null ? DEFAULT_ACTIVATION_FUNCTION : activationFunction;
         this.errorFunction = errorFunction == null ? DEFAULT_ERROR_FUNCTION : errorFunction;
     }
+
 
     /**
      * Constructs a new {@link Layer}
      *
      * @param size     amount of {@link Neuron neurons} this {@link Layer} (will) contain(s)
      * @param withBias whether or not a bias-{@link Neuron neuron} should be included
-     * @implNote This internally calls the {{@link #Layer(int, boolean, ActivationFunction, ErrorFunction)} main constructor}
+     * @implNote This internally calls the {{@link #Layer(int, boolean, InitializationFunction, ActivationFunction, ErrorFunction)} main constructor}
      * with default activation- and errorfunction.
      */
     public Layer(int size, boolean withBias) {
-        this(size, withBias, null, null);
+        this(size, withBias, null, null, null);
     }
 
     /**
      * Constructs a new {@link Layer}
      *
      * @param size amount of {@link Neuron neurons} this {@link Layer} (will) contain(s)
-     * @implNote This internally calls the {{@link #Layer(int, boolean, ActivationFunction, ErrorFunction)} main constructor}
+     * @implNote This internally calls the {{@link #Layer(int, boolean, InitializationFunction, ActivationFunction, ErrorFunction)} main constructor}
      * without a bias-{@link Neuron} and default activation- and errorfunction.
      */
     public Layer(int size) {
@@ -105,7 +115,10 @@ public abstract class Layer implements Serializable {
                 getBias().connect(t);
             }
         }
+
+        this.neurons.stream().map(Neuron::getConnections).forEach(initializationFunction::initialize);
     }
+
 
     /**
      * The amount of {@link Neuron neurons} in this layer

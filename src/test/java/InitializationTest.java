@@ -1,5 +1,5 @@
 import nl.woetroe.nn.NeuralNetwork;
-import nl.woetroe.nn.function.InitializationType;
+import nl.woetroe.nn.function.initialization.RandomInitialization;
 import nl.woetroe.nn.layer.DenseLayer;
 import nl.woetroe.nn.layer.InputLayer;
 
@@ -25,7 +25,7 @@ import nl.woetroe.nn.layer.InputLayer;
             .withLearningRate(0.1)
             .withInput(0.5, 0.3)
             .withTargetOutput(0.8)
-            .withInitType(InitializationType.RANDOM)
+            .withInitType(new RandomInitialization())
             .withDenseLayer(new DenseLayer(20, true))
             .withDenseLayer(new DenseLayer(10, true))
             .withDenseLayer(new DenseLayer(10, true)).build();

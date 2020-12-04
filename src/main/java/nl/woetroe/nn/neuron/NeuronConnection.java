@@ -1,7 +1,5 @@
 package nl.woetroe.nn.neuron;
 
-import nl.woetroe.nn.util.NetworkUtils;
-
 import java.io.Serializable;
 
 /*
@@ -37,8 +35,8 @@ public final class NeuronConnection implements Serializable {
     /**
      * Constructs a new {@link NeuronConnection}
      *
-     * @param from first neuron
-     * @param to   second neuron
+     * @param from   first neuron
+     * @param to     second neuron
      * @param weight weight of the connection (importance)
      */
     public NeuronConnection(Neuron from, Neuron to, double weight) {
@@ -56,7 +54,7 @@ public final class NeuronConnection implements Serializable {
     public NeuronConnection(Neuron from, Neuron to) {
         this.from = from;
         this.to = to;
-        this.weight = NetworkUtils.nextDouble();
+        this.weight = 0; // was random before
     }
 
     /**
@@ -89,5 +87,14 @@ public final class NeuronConnection implements Serializable {
      */
     public void adjustWeight(double x) {
         this.weight += x;
+    }
+
+    /**
+     * Sets the weight of this connection
+     *
+     * @param x the weight of this connection
+     */
+    public void setWeight(double x) {
+        this.weight = x;
     }
 }

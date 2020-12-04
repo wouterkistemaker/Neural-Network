@@ -2,6 +2,7 @@ package nl.woetroe.nn.layer;
 
 import nl.woetroe.nn.function.activation.ActivationFunction;
 import nl.woetroe.nn.function.error.ErrorFunction;
+import nl.woetroe.nn.function.initialization.InitializationFunction;
 import nl.woetroe.nn.neuron.Neuron;
 
 import java.util.Arrays;
@@ -26,8 +27,28 @@ public final class InputLayer extends Layer {
 
     private static final long serialVersionUID = -6512736351539200069L;
 
-    public InputLayer(int size, boolean withBias, ActivationFunction activationFunction, ErrorFunction errorFunction) {
-        super(size, withBias, activationFunction, errorFunction);
+    public InputLayer(int size, boolean withBias, InitializationFunction initializationFunction, ActivationFunction activationFunction, ErrorFunction errorFunction) {
+        super(size, withBias, initializationFunction, activationFunction, errorFunction);
+    }
+
+    public InputLayer(int size, boolean withBias, InitializationFunction initializationFunction, ActivationFunction activationFunction) {
+        this(size, withBias, initializationFunction, activationFunction, null);
+    }
+
+    public InputLayer(int size, boolean withBias, InitializationFunction initializationFunction, ErrorFunction errorFunction) {
+        this(size, withBias, initializationFunction, null, errorFunction);
+    }
+
+    public InputLayer(int size, boolean withBias, ActivationFunction initializationFunction, ErrorFunction errorFunction) {
+        this(size, withBias, null, initializationFunction, errorFunction);
+    }
+
+    public InputLayer(int size, boolean withBias, ActivationFunction activationFunction) {
+        this(size, withBias, null, activationFunction, null);
+    }
+
+    public InputLayer(int size, boolean withBias, ErrorFunction errorFunction) {
+        this(size, withBias, null, null, errorFunction);
     }
 
     public InputLayer(int size, boolean withBias) {

@@ -1,5 +1,7 @@
 unnamed package
 nl.woetroe.nn
+nl.woetroe.nn.data
+nl.woetroe.nn.data.type
 nl.woetroe.nn.function.activation
 nl.woetroe.nn.function.error
 nl.woetroe.nn.function.initialization

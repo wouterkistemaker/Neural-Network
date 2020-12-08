@@ -33,4 +33,6 @@ public final class NetworkUtils {
     public static double nextDouble(double lowerBound, double upperBound) {
         return ThreadLocalRandom.current().nextDouble(lowerBound, upperBound);
     }
+
+
 }

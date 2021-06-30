@@ -25,6 +25,10 @@ public final class NeuralNetwork {
 
     private final Set<Layer> layers;
 
+    /**
+     * Constructs a new NeuralNetwork instance containing the specified {@link Layer layers}
+     * @param layers array of {@link Layer layers} of this NeuralNetwork
+     */
     public NeuralNetwork(Layer... layers) {
         this.layers = new LinkedHashSet<>(Arrays.asList(layers));
         this.connect();
@@ -54,7 +58,7 @@ public final class NeuralNetwork {
     }
 
     /**
-     * @return a {@link LinkedHashSet} of {@link Layer Layers}
+     * @return a {@link LinkedHashSet} of {@link Layer layers}
      */
     public Set<Layer> getLayers() {
         return layers;

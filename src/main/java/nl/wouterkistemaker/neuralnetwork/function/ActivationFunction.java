@@ -12,10 +12,12 @@ package nl.wouterkistemaker.neuralnetwork.function;/*
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import java.io.Serializable;
+
 /**
  * Function that activates the result of the weighted sum of all the neurons in a Layer.
  */
-public interface ActivationFunction {
+public interface ActivationFunction extends Serializable {
 
     double activate(double wSum);
 

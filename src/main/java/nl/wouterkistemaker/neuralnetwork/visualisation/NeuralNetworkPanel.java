@@ -27,6 +27,7 @@ import java.util.Set;
 */
 public final class NeuralNetworkPanel extends JPanel {
 
+    private static final long serialVersionUID = -5206286198194216255L;
     private final Layer[] layers;
     private final Set<GraphicNeuron> graphicNeurons;
     private final Set<GraphicNeuronConnection> graphicNeuronConnections;

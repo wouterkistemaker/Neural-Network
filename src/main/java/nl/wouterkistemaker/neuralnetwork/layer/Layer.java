@@ -3,6 +3,7 @@ package nl.wouterkistemaker.neuralnetwork.layer;
 import nl.wouterkistemaker.neuralnetwork.neuron.BiasNeuron;
 import nl.wouterkistemaker.neuralnetwork.neuron.Neuron;
 
+import java.io.Serializable;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -19,8 +20,9 @@ import java.util.Set;
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-public class Layer {
+public class Layer implements Serializable {
 
+    private static final long serialVersionUID = -8895510521099509056L;
     private final boolean bias;
     private final Set<Neuron> neurons;
 

@@ -14,11 +14,13 @@ package nl.wouterkistemaker.neuralnetwork.function;/*
 
 import nl.wouterkistemaker.neuralnetwork.neuron.NeuronConnection;
 
+import java.io.Serializable;
+
 /**
  * This function determines the initial weights of the connections between the
  * neurons of the layer that this function belongs to and the neurons of the next layer.
  */
-public interface InitializationFunction {
+public interface InitializationFunction extends Serializable {
 
     void initialize(NeuronConnection connection);
 

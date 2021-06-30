@@ -17,6 +17,7 @@ package nl.wouterkistemaker.neuralnetwork.neuron;
 import nl.wouterkistemaker.neuralnetwork.NetworkUtility;
 import nl.wouterkistemaker.neuralnetwork.exception.NoSuchConnectionException;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Optional;
@@ -26,8 +27,9 @@ import java.util.Set;
  * Represents an artificial neuron, vaguely related to the biological neuron
  * found in a human brain
  */
-public class Neuron {
+public class Neuron implements Serializable {
 
+    private static final long serialVersionUID = 6952458116227426483L;
     private double value;
     private final Set<NeuronConnection> connections;
 

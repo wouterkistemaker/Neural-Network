@@ -4,6 +4,7 @@ import nl.wouterkistemaker.neuralnetwork.layer.Layer;
 import nl.wouterkistemaker.neuralnetwork.visualisation.NeuralNetworkFrame;
 import nl.wouterkistemaker.neuralnetwork.visualisation.NeuralNetworkPanel;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -21,8 +22,9 @@ import java.util.Set;
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-public final class NeuralNetwork {
+public final class NeuralNetwork implements Serializable {
 
+    private static final long serialVersionUID = 3314104889598862062L;
     private final Set<Layer> layers;
 
     /**

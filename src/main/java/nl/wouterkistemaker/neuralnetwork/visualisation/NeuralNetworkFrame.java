@@ -20,6 +20,8 @@ import java.awt.event.ComponentEvent;
 */
 public final class NeuralNetworkFrame extends JFrame {
 
+    private static final long serialVersionUID = 8389964237793525241L;
+
     public NeuralNetworkFrame(NeuralNetworkPanel panel) {
         super("Neural Network Visualisation by Wouter Kistemaker");
         setSize(new Dimension(1200, 720));

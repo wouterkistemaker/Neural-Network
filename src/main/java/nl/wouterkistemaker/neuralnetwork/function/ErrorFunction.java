@@ -12,11 +12,13 @@ package nl.wouterkistemaker.neuralnetwork.function;/*
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import java.io.Serializable;
+
 /**
  * Function that determines the offset between the output of a neuron
  * and the expected output of that same neuron in a implementation-specific fashion
  */
-public interface ErrorFunction {
+public interface ErrorFunction extends Serializable {
 
     double computeError(double output, double target);
 

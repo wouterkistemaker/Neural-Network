@@ -15,6 +15,8 @@ package nl.wouterkistemaker.neuralnetwork.neuron;
 */
 public final class BiasNeuron extends Neuron {
 
+    private static final long serialVersionUID = 7667553200263840665L;
+
     public BiasNeuron() {
         super(1);
     }

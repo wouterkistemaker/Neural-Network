@@ -27,6 +27,10 @@ public class NetworkUtility {
     }
 
     public static double nextDouble(double lowerBound, double upperBound) {
-        return secureRandom.nextDouble() * (upperBound - lowerBound) + lowerBound;
+        double value;
+        do {
+            value = secureRandom.nextDouble() * (upperBound - lowerBound) + lowerBound;
+        } while (value <= lowerBound);
+        return value;
     }
 }

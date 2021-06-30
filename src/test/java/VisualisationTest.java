@@ -18,13 +18,13 @@ import nl.wouterkistemaker.neuralnetwork.layer.Layer;
 public class VisualisationTest {
 
     public static void main(String[] args) {
-        final Layer inputLayer = new Layer(2);
-        final Layer hiddenLayer = new Layer(10);
-        final Layer hiddenLayer2 = new Layer(25);
-        final Layer hiddenLayer3 = new Layer(8);
-        final Layer hiddenLayer4 = new Layer(8);
-        final Layer hiddenLayer5 = new Layer(8);
-        final Layer hiddenLayer6 = new Layer(8);
+        final Layer inputLayer = new Layer(2,false, new XavierInitialization());
+        final Layer hiddenLayer = new Layer(10, false, new XavierInitialization());
+        final Layer hiddenLayer2 = new Layer(25, false, new XavierInitialization());
+        final Layer hiddenLayer3 = new Layer(8, true, new XavierInitialization());
+        final Layer hiddenLayer4 = new Layer(8, false, new XavierInitialization());
+        final Layer hiddenLayer5 = new Layer(8, true, new XavierInitialization());
+        final Layer hiddenLayer6 = new Layer(8, true, new XavierInitialization());
         final Layer hiddenLayer7 = new Layer(8, false, new XavierInitialization());
         final Layer outputLayer = new Layer(1);
 

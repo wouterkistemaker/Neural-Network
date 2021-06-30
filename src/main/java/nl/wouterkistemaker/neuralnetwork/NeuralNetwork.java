@@ -29,6 +29,7 @@ public final class NeuralNetwork implements Serializable {
 
     /**
      * Constructs a new NeuralNetwork instance containing the specified {@link Layer layers}
+     *
      * @param layers array of {@link Layer layers} of this NeuralNetwork
      */
     public NeuralNetwork(Layer... layers) {

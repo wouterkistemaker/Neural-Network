@@ -1,4 +1,9 @@
-package nl.wouterkistemaker.neuralnetwork.function;/*
+package nl.wouterkistemaker.neuralnetwork.function.initialization;
+
+import nl.wouterkistemaker.neuralnetwork.NetworkUtility;
+import nl.wouterkistemaker.neuralnetwork.neuron.NeuronConnection;
+
+/*
   Copyright (C) 2020-2021, Wouter Kistemaker.
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published
@@ -11,15 +16,15 @@ package nl.wouterkistemaker.neuralnetwork.function;/*
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+public final class RandomInitialization implements InitializationFunction {
 
-import java.io.Serializable;
+    private static final long serialVersionUID = -6199765150513449075L;
 
-/**
- * Function that determines the offset between the output of a neuron
- * and the expected output of that same neuron in a implementation-specific fashion
- */
-public interface ErrorFunction extends Serializable {
+    public RandomInitialization() {
+    }
 
-    double computeError(double output, double target);
-
+    @Override
+    public void initialize(NeuronConnection connection) {
+        connection.setWeight(NetworkUtility.nextDouble());
+    }
 }

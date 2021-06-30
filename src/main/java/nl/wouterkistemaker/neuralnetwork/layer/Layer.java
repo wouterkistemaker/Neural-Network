@@ -1,5 +1,7 @@
 package nl.wouterkistemaker.neuralnetwork.layer;
 
+import nl.wouterkistemaker.neuralnetwork.function.initialization.InitializationFunction;
+import nl.wouterkistemaker.neuralnetwork.function.initialization.RandomInitialization;
 import nl.wouterkistemaker.neuralnetwork.neuron.BiasNeuron;
 import nl.wouterkistemaker.neuralnetwork.neuron.Neuron;
 
@@ -23,14 +25,19 @@ import java.util.Set;
 public class Layer implements Serializable {
 
     private static final long serialVersionUID = -8895510521099509056L;
+
+    private static final InitializationFunction DEFAULT_INITIALIZATION_FUNCTION = new RandomInitialization();
+
     private final boolean bias;
     private final Set<Neuron> neurons;
-
     private BiasNeuron biasNeuron;
 
-    public Layer(int size, boolean bias) {
+    private final InitializationFunction initializationFunction;
+
+    public Layer(int size, boolean bias, InitializationFunction initializationFunction) {
         this.bias = bias;
         this.neurons = new LinkedHashSet<>(size + (bias ? 1 : 0));
+        this.initializationFunction = initializationFunction;
 
         for (int i = 0; i < size; i++) {
             this.neurons.add(new Neuron());
@@ -39,13 +46,20 @@ public class Layer implements Serializable {
         if (bias) this.neurons.add((biasNeuron = new BiasNeuron()));
     }
 
+    public Layer(int size, boolean bias) {
+        this(size, bias, DEFAULT_INITIALIZATION_FUNCTION);
+    }
+
     public Layer(int size) {
         this(size, false);
     }
 
     public void connect(Layer target) {
         neurons.forEach(n -> target.neurons.forEach(t -> {
-            if (!(t instanceof BiasNeuron)) n.connect(t);
+            if (!(t instanceof BiasNeuron)) {
+                n.connect(t);
+                initializationFunction.initialize(n.getConnectionWith(t));
+            }
         }));
     }
 

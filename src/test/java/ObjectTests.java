@@ -40,9 +40,9 @@ public class ObjectTests {
 
         final Neuron lastNeuron = (Neuron) last.getNeurons().toArray()[0];
 
-        Assertions.assertTrue(first.getNeurons().stream().noneMatch(n-> n.isConnectedTo(lastNeuron)));
+        Assertions.assertTrue(first.getNeurons().stream().noneMatch(n -> n.isConnectedTo(lastNeuron)));
         first.connect(last);
-        Assertions.assertFalse(first.getNeurons().stream().noneMatch(n-> n.isConnectedTo(lastNeuron)));
+        Assertions.assertFalse(first.getNeurons().stream().noneMatch(n -> n.isConnectedTo(lastNeuron)));
         Assertions.assertTrue(first.getNeurons().stream().noneMatch(lastNeuron::isConnectedTo));
     }
 }

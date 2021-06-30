@@ -1,7 +1,4 @@
-import nl.wouterkistemaker.neuralnetwork.NeuralNetwork;
-import nl.wouterkistemaker.neuralnetwork.layer.Layer;
-
-/*
+package nl.wouterkistemaker.neuralnetwork.function.error;/*
   Copyright (C) 2020-2021, Wouter Kistemaker.
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published
@@ -14,13 +11,15 @@ import nl.wouterkistemaker.neuralnetwork.layer.Layer;
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-public class VisualisationTest {
 
-    public static void main(String[] args) {
-        final Layer inputLayer = new Layer(2);
-        final Layer outputLayer = new Layer(1);
+import java.io.Serializable;
 
-        final NeuralNetwork network = new NeuralNetwork(inputLayer, outputLayer);
-        network.visualize();
-    }
+/**
+ * Function that determines the offset between the output of a neuron
+ * and the expected output of that same neuron in a implementation-specific fashion
+ */
+public interface ErrorFunction extends Serializable {
+
+    double computeError(double output, double target);
+
 }

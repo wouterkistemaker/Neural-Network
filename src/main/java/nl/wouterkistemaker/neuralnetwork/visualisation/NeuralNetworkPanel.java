@@ -51,8 +51,6 @@ public final class NeuralNetworkPanel extends JPanel {
         setPreferredSize(new Dimension(1280, 720));
         setSize(new Dimension(1280, 720));
 
-        this.calculateFittingSize();
-
         setVisible(true);
     }
 
@@ -119,13 +117,24 @@ public final class NeuralNetworkPanel extends JPanel {
 
     @Override
     public void paintComponent(Graphics graphic) {
+        this.calculateFittingSize();
         createGraphicNeurons();
+
+        graphic.setColor(Color.WHITE);
+        graphic.fillRect(getWidth() - 125, getY(), 125, 25 + layers.length * 25);
+        graphic.setColor(Color.RED);
+        graphic.drawRect(getWidth() - 125, getY(), 125, 25 + layers.length * 25);
+
         for (int i = 0; i < layers.length; i++) {
+            graphic.setColor(Color.BLACK);
+            graphic.drawString(String.format("Layer %s, size=%s", i+1, layers[i].getSize()), getWidth()-115, 25+i * 25);
+
             if ((i + 1) >= layers.length) break;
 
-            graphicNeurons.forEach(gn -> this.drawNeuron(graphic, gn));
             graphicNeuronConnections.forEach(gnc -> this.drawConnection(graphic, gnc));
+            graphicNeurons.forEach(gn -> this.drawNeuron(graphic, gn));
         }
+
         graphic.dispose();
     }
 

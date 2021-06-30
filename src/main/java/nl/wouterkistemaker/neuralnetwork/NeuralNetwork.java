@@ -54,7 +54,6 @@ public final class NeuralNetwork implements Serializable {
             Layer next = layerArray[i + 1];
             current.connect(next);
         }
-
         connected = true;
     }
 

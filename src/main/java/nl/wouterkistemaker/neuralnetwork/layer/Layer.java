@@ -1,5 +1,9 @@
 package nl.wouterkistemaker.neuralnetwork.layer;
 
+import nl.wouterkistemaker.neuralnetwork.function.activation.ActivationFunction;
+import nl.wouterkistemaker.neuralnetwork.function.activation.SigmoidActivation;
+import nl.wouterkistemaker.neuralnetwork.function.error.ErrorFunction;
+import nl.wouterkistemaker.neuralnetwork.function.error.MeanSquaredError;
 import nl.wouterkistemaker.neuralnetwork.function.initialization.InitializationFunction;
 import nl.wouterkistemaker.neuralnetwork.function.initialization.RandomInitialization;
 import nl.wouterkistemaker.neuralnetwork.neuron.BiasNeuron;
@@ -27,23 +31,38 @@ public class Layer implements Serializable {
     private static final long serialVersionUID = -8895510521099509056L;
 
     private static final InitializationFunction DEFAULT_INITIALIZATION_FUNCTION = new RandomInitialization();
+    private static final ActivationFunction DEFAULT_ACTIVATION_FUNCTION = new SigmoidActivation();
+    private static final ErrorFunction DEFAULT_ERROR_FUNCTION = new MeanSquaredError();
 
     private final boolean bias;
     private final Set<Neuron> neurons;
     private BiasNeuron biasNeuron;
 
     private final InitializationFunction initializationFunction;
+    private final ActivationFunction activationFunction;
+    private final ErrorFunction errorFunction;
 
-    public Layer(int size, boolean bias, InitializationFunction initializationFunction) {
+    public Layer(int size, boolean bias, InitializationFunction initializationFunction, ActivationFunction activationFunction, ErrorFunction errorFunction) {
         this.bias = bias;
         this.neurons = new LinkedHashSet<>(size + (bias ? 1 : 0));
+
         this.initializationFunction = initializationFunction;
+        this.activationFunction = activationFunction;
+        this.errorFunction = errorFunction;
 
         for (int i = 0; i < size; i++) {
             this.neurons.add(new Neuron());
         }
 
         if (bias) this.neurons.add((biasNeuron = new BiasNeuron()));
+    }
+
+    public Layer(int size, boolean bias, InitializationFunction initializationFunction, ActivationFunction activationFunction) {
+        this(size, bias, initializationFunction, activationFunction, DEFAULT_ERROR_FUNCTION);
+    }
+
+    public Layer(int size, boolean bias, InitializationFunction initializationFunction) {
+        this(size, bias, initializationFunction, DEFAULT_ACTIVATION_FUNCTION);
     }
 
     public Layer(int size, boolean bias) {

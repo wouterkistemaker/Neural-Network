@@ -127,7 +127,7 @@ public final class NeuralNetworkPanel extends JPanel {
 
         for (int i = 0; i < layers.length; i++) {
             graphic.setColor(Color.BLACK);
-            graphic.drawString(String.format("Layer %s, size=%s", i+1, layers[i].getSize()), getWidth()-115, 25+i * 25);
+            graphic.drawString(String.format("Layer %s, size=%s", i + 1, layers[i].getSize()), getWidth() - 115, 25 + i * 25);
 
             if ((i + 1) >= layers.length) break;
 

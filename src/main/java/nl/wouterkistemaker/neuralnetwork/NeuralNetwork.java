@@ -5,9 +5,7 @@ import nl.wouterkistemaker.neuralnetwork.visualisation.NeuralNetworkFrame;
 import nl.wouterkistemaker.neuralnetwork.visualisation.NeuralNetworkPanel;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 /*
   Copyright (C) 2020-2021, Wouter Kistemaker.
@@ -37,7 +35,14 @@ public final class NeuralNetwork implements Serializable {
     public NeuralNetwork(Layer... layers) {
         this.connected = false;
         this.layers = new LinkedHashSet<>(Arrays.asList(layers));
+        this.layers.forEach(l -> l.setNetworkInstance(this));
         this.connect();
+    }
+
+    public Layer getPreviousLayer(Layer current) {
+        List<Layer> list = new LinkedList<>(layers);
+        final int index = list.indexOf(current);
+        return (index - 1) < 0 ? current : list.get(index - 1);
     }
 
     /**

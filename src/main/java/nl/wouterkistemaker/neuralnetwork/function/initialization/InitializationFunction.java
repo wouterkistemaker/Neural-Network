@@ -12,6 +12,8 @@ package nl.wouterkistemaker.neuralnetwork.function.initialization;/*
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import nl.wouterkistemaker.neuralnetwork.NeuralNetwork;
+import nl.wouterkistemaker.neuralnetwork.layer.Layer;
 import nl.wouterkistemaker.neuralnetwork.neuron.NeuronConnection;
 
 import java.io.Serializable;
@@ -22,6 +24,6 @@ import java.io.Serializable;
  */
 public interface InitializationFunction extends Serializable {
 
-    void initialize(NeuronConnection connection);
+    void initialize(Layer previous, NeuronConnection connection);
 
 }

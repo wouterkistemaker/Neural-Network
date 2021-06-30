@@ -1,6 +1,7 @@
 package nl.wouterkistemaker.neuralnetwork.function.initialization;
 
 import nl.wouterkistemaker.neuralnetwork.NetworkUtility;
+import nl.wouterkistemaker.neuralnetwork.layer.Layer;
 import nl.wouterkistemaker.neuralnetwork.neuron.NeuronConnection;
 
 /*
@@ -24,7 +25,7 @@ public final class RandomInitialization implements InitializationFunction {
     }
 
     @Override
-    public void initialize(NeuronConnection connection) {
+    public void initialize(Layer previous, NeuronConnection connection) {
         connection.setWeight(NetworkUtility.nextDouble());
     }
 }

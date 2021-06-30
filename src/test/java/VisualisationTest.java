@@ -1,4 +1,5 @@
 import nl.wouterkistemaker.neuralnetwork.NeuralNetwork;
+import nl.wouterkistemaker.neuralnetwork.function.initialization.XavierInitialization;
 import nl.wouterkistemaker.neuralnetwork.layer.Layer;
 
 /*
@@ -24,7 +25,7 @@ public class VisualisationTest {
         final Layer hiddenLayer4 = new Layer(8);
         final Layer hiddenLayer5 = new Layer(8);
         final Layer hiddenLayer6 = new Layer(8);
-        final Layer hiddenLayer7 = new Layer(8);
+        final Layer hiddenLayer7 = new Layer(8, false, new XavierInitialization());
         final Layer outputLayer = new Layer(1);
 
         final NeuralNetwork network = new NeuralNetwork(inputLayer, hiddenLayer, hiddenLayer2, hiddenLayer3, hiddenLayer4, hiddenLayer5, hiddenLayer6, hiddenLayer7, outputLayer);

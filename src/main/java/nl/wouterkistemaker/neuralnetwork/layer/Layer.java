@@ -1,5 +1,6 @@
 package nl.wouterkistemaker.neuralnetwork.layer;
 
+import nl.wouterkistemaker.neuralnetwork.NeuralNetwork;
 import nl.wouterkistemaker.neuralnetwork.function.activation.ActivationFunction;
 import nl.wouterkistemaker.neuralnetwork.function.activation.SigmoidActivation;
 import nl.wouterkistemaker.neuralnetwork.function.error.ErrorFunction;
@@ -30,6 +31,8 @@ public class Layer implements Serializable {
 
     private static final long serialVersionUID = -8895510521099509056L;
 
+    private NeuralNetwork network;
+
     private static final InitializationFunction DEFAULT_INITIALIZATION_FUNCTION = new RandomInitialization();
     private static final ActivationFunction DEFAULT_ACTIVATION_FUNCTION = new SigmoidActivation();
     private static final ErrorFunction DEFAULT_ERROR_FUNCTION = new MeanSquaredError();
@@ -46,9 +49,9 @@ public class Layer implements Serializable {
         this.bias = bias;
         this.neurons = new LinkedHashSet<>(size + (bias ? 1 : 0));
 
-        this.initializationFunction = initializationFunction;
-        this.activationFunction = activationFunction;
-        this.errorFunction = errorFunction;
+        this.initializationFunction = initializationFunction == null ? DEFAULT_INITIALIZATION_FUNCTION : initializationFunction;
+        this.activationFunction = activationFunction == null ? DEFAULT_ACTIVATION_FUNCTION : activationFunction;
+        this.errorFunction = errorFunction == null ? DEFAULT_ERROR_FUNCTION : errorFunction;
 
         for (int i = 0; i < size; i++) {
             this.neurons.add(new Neuron());
@@ -77,7 +80,7 @@ public class Layer implements Serializable {
         neurons.forEach(n -> target.neurons.forEach(t -> {
             if (!(t instanceof BiasNeuron)) {
                 n.connect(t);
-                initializationFunction.initialize(n.getConnectionWith(t));
+                initializationFunction.initialize(network.getPreviousLayer(this), n.getConnectionWith(t));
             }
         }));
     }
@@ -96,5 +99,10 @@ public class Layer implements Serializable {
 
     public final Set<Neuron> getNeurons() {
         return neurons;
+    }
+
+    @Deprecated
+    public void setNetworkInstance(NeuralNetwork network) {
+        this.network = network;
     }
 }

@@ -1,6 +1,8 @@
-package nl.wouterkistemaker.neuralnetwork;
+package nl.wouterkistemaker.neuralnetwork.function.initialization;
 
-import java.security.SecureRandom;
+import nl.wouterkistemaker.neuralnetwork.NetworkUtility;
+import nl.wouterkistemaker.neuralnetwork.layer.Layer;
+import nl.wouterkistemaker.neuralnetwork.neuron.NeuronConnection;
 
 /*
   Copyright (C) 2020-2021, Wouter Kistemaker.
@@ -15,18 +17,16 @@ import java.security.SecureRandom;
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-public class NetworkUtility {
+public final class XavierInitialization implements InitializationFunction {
 
-    private NetworkUtility() {
-    }
+    private static final long serialVersionUID = -3562790173733472660L;
 
-    private static final SecureRandom secureRandom = new SecureRandom();
+    @Override
+    public void initialize(Layer previous, NeuronConnection connection) {
+        final int nInputNodes = previous.getSize();
 
-    public static double nextDouble() {
-        return secureRandom.nextDouble();
-    }
-
-    public static double nextDouble(double lowerBound, double upperBound) {
-        return secureRandom.nextDouble() * (upperBound - lowerBound) + lowerBound;
+        // weight = U [-(1/sqrt(n)), 1/sqrt(n)]
+        final double bound = 1 / Math.sqrt(nInputNodes);
+        connection.setWeight(NetworkUtility.nextDouble(-bound, bound));
     }
 }

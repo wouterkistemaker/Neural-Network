@@ -32,7 +32,7 @@ public final class NeuralNetworkFrame extends JFrame {
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                if (e.getComponent() instanceof NeuralNetworkFrame){
+                if (e.getComponent() instanceof NeuralNetworkFrame) {
                     final Dimension updated = e.getComponent().getSize();
                     panel.setSize(updated);
                 }
@@ -40,10 +40,9 @@ public final class NeuralNetworkFrame extends JFrame {
         });
     }
 
-    public NeuralNetworkFrame(){
+    public NeuralNetworkFrame() {
         this(new NeuralNetworkPanel());
     }
-
 
 
 }

@@ -13,7 +13,7 @@ package nl.wouterkistemaker.neuralnetwork.exception;
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-public final class NoSuchConnectionException extends NullPointerException{
+public final class NoSuchConnectionException extends NullPointerException {
     private static final long serialVersionUID = -2633604612295154846L;
 
     public NoSuchConnectionException() {

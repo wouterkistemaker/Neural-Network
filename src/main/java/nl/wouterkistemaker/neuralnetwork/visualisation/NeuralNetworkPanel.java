@@ -84,7 +84,7 @@ public final class NeuralNetworkPanel extends JPanel {
             currentX += xStep;
         }
 
-        Arrays.stream(layers).forEach(l-> l.getNeurons().forEach(n-> n.getConnections().forEach(con -> graphicNeuronConnections.add(new GraphicNeuronConnection(con)))));
+        Arrays.stream(layers).forEach(l -> l.getNeurons().forEach(n -> n.getConnections().forEach(con -> graphicNeuronConnections.add(new GraphicNeuronConnection(con)))));
     }
 
     private GraphicNeuron getGraphicNeuron(Neuron n) {

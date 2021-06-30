@@ -17,7 +17,6 @@ import nl.wouterkistemaker.neuralnetwork.neuron.NeuronConnection;
 /**
  * This function determines the initial weights of the connections between the
  * neurons of the layer that this function belongs to and the neurons of the next layer.
- *
  */
 public interface InitializationFunction {
 

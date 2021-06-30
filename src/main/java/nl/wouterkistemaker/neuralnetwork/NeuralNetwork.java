@@ -1,7 +1,6 @@
 package nl.wouterkistemaker.neuralnetwork;
 
 import nl.wouterkistemaker.neuralnetwork.layer.Layer;
-import nl.wouterkistemaker.neuralnetwork.neuron.NeuronConnection;
 import nl.wouterkistemaker.neuralnetwork.visualisation.NeuralNetworkFrame;
 import nl.wouterkistemaker.neuralnetwork.visualisation.NeuralNetworkPanel;
 

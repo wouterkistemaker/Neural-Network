@@ -24,8 +24,8 @@ public final class NeuralNetworkFrame extends JFrame {
 
     public NeuralNetworkFrame(NeuralNetworkPanel panel) {
         super("Neural Network Visualisation by Wouter Kistemaker");
-        setSize(new Dimension(1200, 720));
-        setPreferredSize(new Dimension(1200, 720));
+        setSize(new Dimension(1280, 720));
+        setPreferredSize(new Dimension(1280, 720));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(true);
         add(panel);

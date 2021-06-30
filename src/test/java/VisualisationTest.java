@@ -1,5 +1,6 @@
 import nl.wouterkistemaker.neuralnetwork.NeuralNetwork;
 import nl.wouterkistemaker.neuralnetwork.layer.Layer;
+import nl.wouterkistemaker.neuralnetwork.neuron.Neuron;
 
 /*
   Copyright (C) 2020-2021, Wouter Kistemaker.
@@ -17,10 +18,11 @@ import nl.wouterkistemaker.neuralnetwork.layer.Layer;
 public class VisualisationTest {
 
     public static void main(String[] args) {
-        final Layer inputLayer = new Layer(2);
-        final Layer outputLayer = new Layer(1);
+        final Layer inputLayer = new Layer(4);
+        final Layer hiddenLayer = new Layer(12);
+        final Layer outputLayer = new Layer(4);
 
-        final NeuralNetwork network = new NeuralNetwork(inputLayer, outputLayer);
+        final NeuralNetwork network = new NeuralNetwork(inputLayer, hiddenLayer, outputLayer);
         network.visualize();
     }
 }

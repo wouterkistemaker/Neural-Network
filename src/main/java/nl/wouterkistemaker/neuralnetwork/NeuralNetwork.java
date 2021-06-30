@@ -27,12 +27,15 @@ public final class NeuralNetwork implements Serializable {
     private static final long serialVersionUID = 3314104889598862062L;
     private final Set<Layer> layers;
 
+    private boolean connected; // boolean signalling whether or not the layers are yet interconnected
+
     /**
      * Constructs a new NeuralNetwork instance containing the specified {@link Layer layers}
      *
      * @param layers array of {@link Layer layers} of this NeuralNetwork
      */
     public NeuralNetwork(Layer... layers) {
+        this.connected = false;
         this.layers = new LinkedHashSet<>(Arrays.asList(layers));
         this.connect();
     }
@@ -42,22 +45,24 @@ public final class NeuralNetwork implements Serializable {
      * {@link Layer} to the next {@link Layer} in the network
      */
     private void connect() {
+        if (connected) return;
+
         final Layer[] layerArray = layers.toArray(new Layer[0]);
         for (int i = 0; i < layerArray.length; i++) {
-            if ((i + 1) >= layerArray.length) break;
-
             Layer current = layerArray[i];
+            if ((i + 1) >= layerArray.length) return;
             Layer next = layerArray[i + 1];
-
             current.connect(next);
         }
+
+        connected = true;
     }
 
     /**
      * Helper function that creates a comprehensible overview of this network's architecture
      */
     public final void visualize() {
-        new NeuralNetworkFrame(new NeuralNetworkPanel(layers.toArray(new Layer[0])));
+        new NeuralNetworkFrame(new NeuralNetworkPanel(this));
     }
 
     /**

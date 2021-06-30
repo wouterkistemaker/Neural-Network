@@ -48,8 +48,8 @@ public final class NeuralNetworkPanel extends JPanel {
         this.graphicNeuronConnections = new HashSet<>();
 
         setBorder(BorderFactory.createLineBorder(Color.black));
-        setPreferredSize(new Dimension(1200, 720));
-        setSize(new Dimension(1200, 720));
+        setPreferredSize(new Dimension(1280, 720));
+        setSize(new Dimension(1280, 720));
 
         this.calculateFittingSize();
 
@@ -102,6 +102,19 @@ public final class NeuralNetworkPanel extends JPanel {
     private void drawConnection(Graphics graphic, GraphicNeuronConnection connection) {
         graphic.setColor(connection.from.neuron instanceof BiasNeuron ? Color.GREEN : Color.MAGENTA);
         graphic.drawLine(connection.from.getCenterX(), connection.from.getCenterY(), connection.to.getCenterX(), connection.to.getCenterY());
+
+        int dX = connection.from.getCenterX() - connection.to.getCenterX();
+        int dY = connection.from.getCenterY() - connection.to.getCenterY();
+
+        int weightX = dX / 2;
+        int weightY = dY / 2;
+
+        if (getConnectionCount(connection.from.layer, connection.to.layer) <= 8) {
+            graphic.setColor(Color.blue);
+            graphic.drawString(String.format("%.2f", connection.connection.getWeight()),
+                    connection.from.getCenterX() - weightX,
+                    connection.from.getCenterY() - weightY - 10);
+        }
     }
 
     @Override
@@ -109,9 +122,6 @@ public final class NeuralNetworkPanel extends JPanel {
         createGraphicNeurons();
         for (int i = 0; i < layers.length; i++) {
             if ((i + 1) >= layers.length) break;
-
-            final Layer current = layers[i];
-            final Layer next = layers[i + 1];
 
             graphicNeurons.forEach(gn -> this.drawNeuron(graphic, gn));
             graphicNeuronConnections.forEach(gnc -> this.drawConnection(graphic, gnc));
@@ -129,6 +139,17 @@ public final class NeuralNetworkPanel extends JPanel {
         while (actualSize * biggest > (getHeight() - 2 * paddingY)) {
             actualSize--;
         }
+    }
+
+    private int getConnectionCount(Layer from, Layer to) {
+        int sum = 0;
+
+        sum += from.getSize() * to.getSize();
+        if (to.hasBias()) {
+            sum -= from.getSize();
+        }
+
+        return sum;
     }
 
     private final class GraphicNeuron {

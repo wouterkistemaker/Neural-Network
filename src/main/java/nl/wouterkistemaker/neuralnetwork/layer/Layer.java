@@ -46,6 +46,9 @@ public class Layer implements Serializable {
     private final ErrorFunction errorFunction;
 
     public Layer(int size, boolean bias, InitializationFunction initializationFunction, ActivationFunction activationFunction, ErrorFunction errorFunction) {
+        if (size < 0){
+            throw new IllegalArgumentException("Size must be > 0");
+        }
         this.bias = bias;
         this.neurons = new LinkedHashSet<>(size + (bias ? 1 : 0));
 

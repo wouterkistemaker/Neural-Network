@@ -81,6 +81,7 @@ public class Layer implements Serializable {
     }
 
     public void connect(Layer target) {
+        this.checkNetworkInstance();
         neurons.forEach(n -> target.neurons.forEach(t -> {
             if (!(t instanceof BiasNeuron)) {
                 n.connect(t);
@@ -90,6 +91,7 @@ public class Layer implements Serializable {
     }
 
     public void feedforward(Layer next) {
+        this.checkNetworkInstance();
         for (Neuron nextNeuron : next.getNeurons()) {
             double sum = 0.0D;
 
@@ -125,5 +127,11 @@ public class Layer implements Serializable {
             throw new IllegalStateException("The instance can only be set once");
         }
         this.network = network;
+    }
+
+    private void checkNetworkInstance(){
+        if (network == null){
+            throw new IllegalStateException("NeuralNetwork instance is missing");
+        }
     }
 }

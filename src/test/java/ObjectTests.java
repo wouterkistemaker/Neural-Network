@@ -1,3 +1,4 @@
+import nl.wouterkistemaker.neuralnetwork.NeuralNetwork;
 import nl.wouterkistemaker.neuralnetwork.layer.Layer;
 import nl.wouterkistemaker.neuralnetwork.neuron.BiasNeuron;
 import nl.wouterkistemaker.neuralnetwork.neuron.Neuron;
@@ -41,7 +42,9 @@ public class ObjectTests {
         final Neuron lastNeuron = (Neuron) last.getNeurons().toArray()[0];
 
         Assertions.assertTrue(first.getNeurons().stream().noneMatch(n -> n.isConnectedTo(lastNeuron)));
-        first.connect(last);
+
+        new NeuralNetwork(first, last);
+
         Assertions.assertFalse(first.getNeurons().stream().noneMatch(n -> n.isConnectedTo(lastNeuron)));
         Assertions.assertTrue(first.getNeurons().stream().noneMatch(lastNeuron::isConnectedTo));
     }

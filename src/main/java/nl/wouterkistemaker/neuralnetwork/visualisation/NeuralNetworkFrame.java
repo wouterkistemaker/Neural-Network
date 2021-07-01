@@ -22,12 +22,8 @@ public final class NeuralNetworkFrame extends JFrame {
 
     private static final long serialVersionUID = 8389964237793525241L;
 
-    private final NeuralNetworkPanel panel;
-
     public NeuralNetworkFrame(NeuralNetworkPanel panel) {
         super("Neural Network Visualisation by Wouter Kistemaker");
-
-        this.panel = panel;
 
         setSize(new Dimension(1280, 720));
         setPreferredSize(new Dimension(1280, 720));
@@ -47,8 +43,8 @@ public final class NeuralNetworkFrame extends JFrame {
         });
     }
 
-    public void update() {
-        panel.repaint();
+    public synchronized void update() {
+        repaint();
     }
 
     public NeuralNetworkFrame() {

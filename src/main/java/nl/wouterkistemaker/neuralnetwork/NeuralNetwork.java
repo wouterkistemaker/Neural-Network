@@ -50,7 +50,7 @@ public final class NeuralNetwork implements Serializable {
 
     public void feedforward() {
         for (int i = 0; i < layers.size(); i++) {
-            if (i + 1 >= layers.size()) return;
+            if (i + 1 >= layers.size()) break;
 
             final Layer current = layers.get(i);
             final Layer next = layers.get(i + 1);
@@ -68,7 +68,7 @@ public final class NeuralNetwork implements Serializable {
     private void connect() {
         if (connected) return;
         for (int i = 0; i < layers.size(); i++) {
-            if (i + 1 >= layers.size()) return; // last layer
+            if (i + 1 >= layers.size()) break; // last layer
 
             final Layer layer = layers.get(i);
             final Layer next = layers.get(i + 1);
@@ -84,6 +84,8 @@ public final class NeuralNetwork implements Serializable {
     public final void visualize() {
         if (this.frame == null) {
             this.frame = new NeuralNetworkFrame(new NeuralNetworkPanel(this));
+        } else {
+            this.frame.update();
         }
     }
 

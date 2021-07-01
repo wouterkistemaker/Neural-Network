@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /*
@@ -28,7 +29,8 @@ import java.util.Set;
 public final class NeuralNetworkPanel extends JPanel {
 
     private static final long serialVersionUID = -5206286198194216255L;
-    private final Layer[] layers;
+    private final List<Layer> layers;
+    private final NeuralNetwork network;
     private final Set<GraphicNeuron> graphicNeurons;
     private final Set<GraphicNeuronConnection> graphicNeuronConnections;
 
@@ -43,11 +45,12 @@ public final class NeuralNetworkPanel extends JPanel {
     }
 
     public NeuralNetworkPanel(NeuralNetwork network) {
-        this.layers = network.getLayers().toArray(new Layer[0]);
+        this.network=network;
+        this.layers = network.getLayers();
         this.graphicNeurons = new HashSet<>();
         this.graphicNeuronConnections = new HashSet<>();
 
-        setBorder(BorderFactory.createLineBorder(Color.black));
+        setBorder(BorderFactory.createLineBorder(Color.BLACK));
         setPreferredSize(new Dimension(1280, 720));
         setSize(new Dimension(1280, 720));
 
@@ -64,7 +67,7 @@ public final class NeuralNetworkPanel extends JPanel {
         final int totalWidth = getWidth();
         final int width = totalWidth - (2 * paddingX);
 
-        final int nRectanglesHorizontal = 2 + (layers.length - 1);
+        final int nRectanglesHorizontal = 2 + (layers.size() - 1);
         final int xStep = width / nRectanglesHorizontal;
 
         int currentX = xStep;
@@ -83,7 +86,7 @@ public final class NeuralNetworkPanel extends JPanel {
             currentX += xStep;
         }
 
-        Arrays.stream(layers).forEach(l -> l.getNeurons().forEach(n -> n.getConnections().forEach(con -> graphicNeuronConnections.add(new GraphicNeuronConnection(con)))));
+        layers.forEach(l -> l.getNeurons().forEach(n -> n.getConnections().forEach(con -> graphicNeuronConnections.add(new GraphicNeuronConnection(con)))));
     }
 
     private GraphicNeuron getGraphicNeuron(Neuron n) {
@@ -117,29 +120,24 @@ public final class NeuralNetworkPanel extends JPanel {
 
     @Override
     public void paintComponent(Graphics graphic) {
-        System.out.println("Starting to paint the panel");
-
         this.calculateFittingSize();
         createGraphicNeurons();
 
         graphic.setColor(Color.WHITE);
-        graphic.fillRect(getWidth() - 125, getY(), 125, 25 + layers.length * 25);
+        graphic.fillRect(getWidth() - 125, getY(), 125, 25 + layers.size() * 25);
         graphic.setColor(Color.RED);
-        graphic.drawRect(getWidth() - 125, getY(), 125, 25 + layers.length * 25);
+        graphic.drawRect(getWidth() - 125, getY(), 125, 25 + layers.size() * 25);
 
-        for (int i = 0; i < layers.length; i++) {
+        for (int i = 0; i < layers.size(); i++) {
             graphic.setColor(Color.BLACK);
-            graphic.drawString(String.format("Layer %s, size=%s", i + 1, layers[i].getSize()), getWidth() - 115, 25 + i * 25);
+            graphic.drawString(String.format("Layer %s, size=%s", i + 1, layers.get(i).getSize()), getWidth() - 115, 25 + i * 25);
 
-            if ((i + 1) >= layers.length) break;
+            if ((i + 1) >= layers.size()) break;
 
             graphicNeuronConnections.forEach(gnc -> this.drawConnection(graphic, gnc));
             graphicNeurons.forEach(gn -> this.drawNeuron(graphic, gn));
         }
-
-//        graphic.dispose();
-
-        System.out.println("Drew the whole damn thing!");
+        graphic.dispose(); // Not sure if this is necessary so can be removed if this causes breaks of the system.
     }
 
     private void calculateFittingSize() {

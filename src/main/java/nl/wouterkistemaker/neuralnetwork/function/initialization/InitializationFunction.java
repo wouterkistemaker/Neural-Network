@@ -12,7 +12,6 @@ package nl.wouterkistemaker.neuralnetwork.function.initialization;/*
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import nl.wouterkistemaker.neuralnetwork.NeuralNetwork;
 import nl.wouterkistemaker.neuralnetwork.layer.Layer;
 import nl.wouterkistemaker.neuralnetwork.neuron.NeuronConnection;
 

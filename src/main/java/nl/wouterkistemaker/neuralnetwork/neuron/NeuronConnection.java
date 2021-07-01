@@ -97,4 +97,5 @@ public final class NeuronConnection implements Serializable {
     public void setWeight(double x) {
         this.weight = x;
     }
+
 }

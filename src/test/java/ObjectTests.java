@@ -1,4 +1,5 @@
 import nl.wouterkistemaker.neuralnetwork.NeuralNetwork;
+import nl.wouterkistemaker.neuralnetwork.function.initialization.XavierInitialization;
 import nl.wouterkistemaker.neuralnetwork.layer.Layer;
 import nl.wouterkistemaker.neuralnetwork.neuron.BiasNeuron;
 import nl.wouterkistemaker.neuralnetwork.neuron.Neuron;
@@ -47,5 +48,24 @@ public class ObjectTests {
 
         Assertions.assertFalse(first.getNeurons().stream().noneMatch(n -> n.isConnectedTo(lastNeuron)));
         Assertions.assertTrue(first.getNeurons().stream().noneMatch(lastNeuron::isConnectedTo));
+    }
+
+    @Test
+    public void testSaveAndLoad() {
+        final Layer input = new Layer(2, false, new XavierInitialization());
+        final Layer output = new Layer(1, false, new XavierInitialization());
+
+        final NeuralNetwork network = new NeuralNetwork(input, output);
+
+        network.save();
+
+        final NeuralNetwork copy = NeuralNetwork.load();
+
+        Assertions.assertEquals(network.hashCode(), copy.hashCode());
+
+        final Neuron outputNeuron = (Neuron) output.getNeurons().toArray()[0];
+        final Neuron outputNeuronCopy = (Neuron) copy.getLayers().get(copy.getLayers().size() - 1).getNeurons().toArray()[0];
+
+        Assertions.assertEquals(outputNeuron, outputNeuronCopy);
     }
 }

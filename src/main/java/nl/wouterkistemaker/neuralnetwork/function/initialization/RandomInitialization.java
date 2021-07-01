@@ -21,9 +21,6 @@ public final class RandomInitialization implements InitializationFunction {
 
     private static final long serialVersionUID = -6199765150513449075L;
 
-    public RandomInitialization() {
-    }
-
     @Override
     public void initialize(Layer previous, NeuronConnection connection) {
         connection.setWeight(NetworkUtility.nextDouble());

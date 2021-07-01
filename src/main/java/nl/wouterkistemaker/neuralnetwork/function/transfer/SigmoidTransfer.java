@@ -1,4 +1,4 @@
-package nl.wouterkistemaker.neuralnetwork.function.activation;
+package nl.wouterkistemaker.neuralnetwork.function.transfer;
 
 /*
   Copyright (C) 2020-2021, Wouter Kistemaker.
@@ -13,7 +13,7 @@ package nl.wouterkistemaker.neuralnetwork.function.activation;
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-public final class SigmoidActivation implements ActivationFunction {
+public final class SigmoidTransfer implements TransferFunction {
     private static final long serialVersionUID = 2684630499328743102L;
 
     @Override

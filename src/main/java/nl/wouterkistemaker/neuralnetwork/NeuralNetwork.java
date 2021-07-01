@@ -4,10 +4,8 @@ import nl.wouterkistemaker.neuralnetwork.layer.Layer;
 import nl.wouterkistemaker.neuralnetwork.visualisation.NeuralNetworkFrame;
 import nl.wouterkistemaker.neuralnetwork.visualisation.NeuralNetworkPanel;
 
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 /*
   Copyright (C) 2020-2021, Wouter Kistemaker.
@@ -25,6 +23,9 @@ import java.util.List;
 public final class NeuralNetwork implements Serializable {
 
     private static final long serialVersionUID = 3314104889598862062L;
+    private static final String DEFAULT_FILE_NAME = "neuralnetwork.dat";
+
+    private final UUID id;
     private final List<Layer> layers;
 
     private boolean connected; // boolean signalling whether or not the layers are yet interconnected
@@ -37,18 +38,19 @@ public final class NeuralNetwork implements Serializable {
      * @param layers array of {@link Layer layers} of this NeuralNetwork
      */
     public NeuralNetwork(Layer... layers) {
+        this.id = UUID.randomUUID();
         this.connected = false;
         this.layers = new LinkedList<>(Arrays.asList(layers));
         this.layers.forEach(l -> l.setNetworkInstance(this));
         this.connect();
     }
 
-    public Layer getPreviousLayer(Layer current) {
+    public final Layer getPreviousLayer(Layer current) {
         final int index = layers.indexOf(current);
         return (index - 1) < 0 ? current : layers.get(index - 1);
     }
 
-    public void feedforward() {
+    public final void feedforward() {
         for (int i = 0; i < layers.size(); i++) {
             if (i + 1 >= layers.size()) break;
 
@@ -89,10 +91,64 @@ public final class NeuralNetwork implements Serializable {
         }
     }
 
+    public final void save() {
+        this.save(null);
+    }
+
+    public final void save(File file) {
+        if (file == null) {
+            file = new File(DEFAULT_FILE_NAME);
+        }
+
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            try (ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(file))) {
+                os.writeObject(this);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static NeuralNetwork load() {
+        return load(null);
+    }
+
+    public static NeuralNetwork load(File file) {
+        if (file == null) {
+            file = new File(DEFAULT_FILE_NAME);
+        }
+
+        if (!file.exists()) {
+            throw new IllegalStateException("File does not exist");
+        }
+
+        try (ObjectInputStream is = new ObjectInputStream(new FileInputStream(file))) {
+
+            final Object o = is.readObject();
+
+            if (o instanceof NeuralNetwork) {
+                return (NeuralNetwork) o;
+            } else {
+                throw new IllegalStateException("File does not contain NeuralNetwork data");
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
     /**
      * @return a {@link LinkedList} of {@link Layer layers}
      */
-    public List<Layer> getLayers() {
+    public final List<Layer> getLayers() {
         return layers;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

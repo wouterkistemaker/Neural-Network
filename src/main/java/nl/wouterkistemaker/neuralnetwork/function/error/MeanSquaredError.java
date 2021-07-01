@@ -20,4 +20,5 @@ public class MeanSquaredError implements ErrorFunction {
     public double computeError(double output, double target) {
         return Math.pow(output - target, 2);
     }
+
 }

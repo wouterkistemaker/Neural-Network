@@ -21,5 +21,4 @@ public final class BiasNeuron extends Neuron {
         super(1);
     }
 
-
 }

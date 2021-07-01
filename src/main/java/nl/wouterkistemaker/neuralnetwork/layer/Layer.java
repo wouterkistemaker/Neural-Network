@@ -1,12 +1,12 @@
 package nl.wouterkistemaker.neuralnetwork.layer;
 
 import nl.wouterkistemaker.neuralnetwork.NeuralNetwork;
-import nl.wouterkistemaker.neuralnetwork.function.activation.ActivationFunction;
-import nl.wouterkistemaker.neuralnetwork.function.activation.SigmoidActivation;
 import nl.wouterkistemaker.neuralnetwork.function.error.ErrorFunction;
 import nl.wouterkistemaker.neuralnetwork.function.error.MeanSquaredError;
 import nl.wouterkistemaker.neuralnetwork.function.initialization.InitializationFunction;
 import nl.wouterkistemaker.neuralnetwork.function.initialization.RandomInitialization;
+import nl.wouterkistemaker.neuralnetwork.function.transfer.SigmoidTransfer;
+import nl.wouterkistemaker.neuralnetwork.function.transfer.TransferFunction;
 import nl.wouterkistemaker.neuralnetwork.neuron.BiasNeuron;
 import nl.wouterkistemaker.neuralnetwork.neuron.Neuron;
 import nl.wouterkistemaker.neuralnetwork.neuron.NeuronConnection;
@@ -35,7 +35,7 @@ public class Layer implements Serializable {
     private NeuralNetwork network;
 
     private static final InitializationFunction DEFAULT_INITIALIZATION_FUNCTION = new RandomInitialization();
-    private static final ActivationFunction DEFAULT_ACTIVATION_FUNCTION = new SigmoidActivation();
+    private static final TransferFunction DEFAULT_ACTIVATION_FUNCTION = new SigmoidTransfer();
     private static final ErrorFunction DEFAULT_ERROR_FUNCTION = new MeanSquaredError();
 
     private final boolean bias;
@@ -43,10 +43,10 @@ public class Layer implements Serializable {
     private BiasNeuron biasNeuron;
 
     private final InitializationFunction initializationFunction;
-    private final ActivationFunction activationFunction;
+    private final TransferFunction transferFunction;
     private final ErrorFunction errorFunction;
 
-    public Layer(int size, boolean bias, InitializationFunction initializationFunction, ActivationFunction activationFunction, ErrorFunction errorFunction) {
+    public Layer(int size, boolean bias, InitializationFunction initializationFunction, TransferFunction transferFunction, ErrorFunction errorFunction) {
         if (size < 0) {
             throw new IllegalArgumentException("Size must be > 0");
         }
@@ -54,18 +54,18 @@ public class Layer implements Serializable {
         this.neurons = new LinkedHashSet<>(size + (bias ? 1 : 0));
 
         this.initializationFunction = initializationFunction == null ? DEFAULT_INITIALIZATION_FUNCTION : initializationFunction;
-        this.activationFunction = activationFunction == null ? DEFAULT_ACTIVATION_FUNCTION : activationFunction;
+        this.transferFunction = transferFunction == null ? DEFAULT_ACTIVATION_FUNCTION : transferFunction;
         this.errorFunction = errorFunction == null ? DEFAULT_ERROR_FUNCTION : errorFunction;
 
         for (int i = 0; i < size; i++) {
-            this.neurons.add(new Neuron());
+            this.neurons.add(new Neuron(true));
         }
 
         if (bias) this.neurons.add((biasNeuron = new BiasNeuron()));
     }
 
-    public Layer(int size, boolean bias, InitializationFunction initializationFunction, ActivationFunction activationFunction) {
-        this(size, bias, initializationFunction, activationFunction, DEFAULT_ERROR_FUNCTION);
+    public Layer(int size, boolean bias, InitializationFunction initializationFunction, TransferFunction transferFunction) {
+        this(size, bias, initializationFunction, transferFunction, DEFAULT_ERROR_FUNCTION);
     }
 
     public Layer(int size, boolean bias, InitializationFunction initializationFunction) {
@@ -101,7 +101,7 @@ public class Layer implements Serializable {
                 final NeuronConnection connection = current.getConnectionWith(nextNeuron);
                 sum += (current.getValue() * connection.getWeight());
             }
-            nextNeuron.setValue(activationFunction.activate(sum));
+            nextNeuron.setValue(transferFunction.activate(sum));
         }
     }
 
@@ -129,9 +129,11 @@ public class Layer implements Serializable {
         this.network = network;
     }
 
-    private void checkNetworkInstance(){
-        if (network == null){
+    private void checkNetworkInstance() {
+        if (network == null) {
             throw new IllegalStateException("NeuralNetwork instance is missing");
         }
     }
+
+
 }

@@ -18,10 +18,7 @@ import nl.wouterkistemaker.neuralnetwork.NetworkUtility;
 import nl.wouterkistemaker.neuralnetwork.exception.NoSuchConnectionException;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Represents an artificial neuron, vaguely related to the biological neuron
@@ -30,6 +27,7 @@ import java.util.Set;
 public class Neuron implements Serializable {
 
     private static final long serialVersionUID = 6952458116227426483L;
+    private final UUID id;
     private double value;
     private final Set<NeuronConnection> connections;
 
@@ -39,6 +37,7 @@ public class Neuron implements Serializable {
      * @param value initial value of the neuron
      */
     public Neuron(double value) {
+        this.id = UUID.randomUUID();
         this.value = value;
         this.connections = new HashSet<>();
     }
@@ -119,5 +118,18 @@ public class Neuron implements Serializable {
      */
     public void setValue(double value) {
         this.value = value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Neuron neuron = (Neuron) o;
+        return Double.compare(neuron.value, value) == 0 && Objects.equals(id, neuron.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value, id);
     }
 }

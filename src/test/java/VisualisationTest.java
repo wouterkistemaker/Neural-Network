@@ -1,6 +1,7 @@
 import nl.wouterkistemaker.neuralnetwork.NeuralNetwork;
 import nl.wouterkistemaker.neuralnetwork.function.initialization.XavierInitialization;
 import nl.wouterkistemaker.neuralnetwork.layer.Layer;
+import nl.wouterkistemaker.neuralnetwork.neuron.Neuron;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -37,7 +38,7 @@ public class VisualisationTest {
         network.visualize();
 
         final ScheduledExecutorService service = Executors.newScheduledThreadPool(8);
-        service.scheduleAtFixedRate(network::feedforward, 3,200, TimeUnit.MILLISECONDS);
+        service.scheduleAtFixedRate(network::feedforward, 3000,200, TimeUnit.MILLISECONDS);
     }
 
 //    public static void main(String[] args) {
@@ -45,9 +46,14 @@ public class VisualisationTest {
 //        final Layer output = new Layer(1, false, new XavierInitialization());
 //        final NeuralNetwork network = new NeuralNetwork(input, output);
 //
+//        network.save();
 //        network.visualize();
 //
-//        final ScheduledExecutorService service = Executors.newScheduledThreadPool(8);
-//        service.scheduleAtFixedRate(network::feedforward, 3, 1,TimeUnit.SECONDS);
+//        final NeuralNetwork copy = NeuralNetwork.load();
+//
+//        final Layer outputCopy = copy.getLayers().get(copy.getLayers().size() - 1);
+//        final Neuron outputNeuron = (Neuron) outputCopy.getNeurons().toArray()[0];
+//
+//        System.out.println("Output of the copy is " + outputNeuron.getValue()); // This is the same as the output of the actual output-neuron so saving & loading works ! :)
 //    }
 }

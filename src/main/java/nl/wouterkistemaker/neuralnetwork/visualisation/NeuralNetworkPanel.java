@@ -8,7 +8,7 @@ import nl.wouterkistemaker.neuralnetwork.neuron.NeuronConnection;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -45,7 +45,7 @@ public final class NeuralNetworkPanel extends JPanel {
     }
 
     public NeuralNetworkPanel(NeuralNetwork network) {
-        this.network=network;
+        this.network = network;
         this.layers = network.getLayers();
         this.graphicNeurons = new HashSet<>();
         this.graphicNeuronConnections = new HashSet<>();
@@ -163,7 +163,8 @@ public final class NeuralNetworkPanel extends JPanel {
         return sum;
     }
 
-    private final class GraphicNeuron {
+    private final class GraphicNeuron implements Serializable {
+        private static final long serialVersionUID = -5124805450106215780L;
         private final Layer layer;
         private final Neuron neuron;
         private final int x;
@@ -210,8 +211,9 @@ public final class NeuralNetworkPanel extends JPanel {
         }
     }
 
-    private final class GraphicNeuronConnection {
+    private final class GraphicNeuronConnection implements Serializable {
 
+        private static final long serialVersionUID = -3427888148405163514L;
         private final NeuronConnection connection;
 
         private final GraphicNeuron from;
@@ -235,5 +237,6 @@ public final class NeuralNetworkPanel extends JPanel {
         public GraphicNeuron getTo() {
             return to;
         }
+
     }
 }

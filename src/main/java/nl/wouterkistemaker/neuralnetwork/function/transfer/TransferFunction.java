@@ -1,4 +1,4 @@
-package nl.wouterkistemaker.neuralnetwork.function.activation;/*
+package nl.wouterkistemaker.neuralnetwork.function.transfer;/*
   Copyright (C) 2020-2021, Wouter Kistemaker.
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published
@@ -17,7 +17,7 @@ import java.io.Serializable;
 /**
  * Function that activates the result of the weighted sum of all the neurons in a Layer.
  */
-public interface ActivationFunction extends Serializable {
+public interface TransferFunction extends Serializable {
 
     double activate(double wSum);
 

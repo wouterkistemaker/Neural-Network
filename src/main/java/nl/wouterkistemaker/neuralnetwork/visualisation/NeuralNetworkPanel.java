@@ -117,6 +117,8 @@ public final class NeuralNetworkPanel extends JPanel {
 
     @Override
     public void paintComponent(Graphics graphic) {
+        System.out.println("Starting to paint the panel");
+
         this.calculateFittingSize();
         createGraphicNeurons();
 
@@ -135,7 +137,9 @@ public final class NeuralNetworkPanel extends JPanel {
             graphicNeurons.forEach(gn -> this.drawNeuron(graphic, gn));
         }
 
-        graphic.dispose();
+//        graphic.dispose();
+
+        System.out.println("Drew the whole damn thing!");
     }
 
     private void calculateFittingSize() {

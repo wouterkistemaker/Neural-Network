@@ -9,6 +9,7 @@ import nl.wouterkistemaker.neuralnetwork.function.initialization.InitializationF
 import nl.wouterkistemaker.neuralnetwork.function.initialization.RandomInitialization;
 import nl.wouterkistemaker.neuralnetwork.neuron.BiasNeuron;
 import nl.wouterkistemaker.neuralnetwork.neuron.Neuron;
+import nl.wouterkistemaker.neuralnetwork.neuron.NeuronConnection;
 
 import java.io.Serializable;
 import java.util.LinkedHashSet;
@@ -46,7 +47,7 @@ public class Layer implements Serializable {
     private final ErrorFunction errorFunction;
 
     public Layer(int size, boolean bias, InitializationFunction initializationFunction, ActivationFunction activationFunction, ErrorFunction errorFunction) {
-        if (size < 0){
+        if (size < 0) {
             throw new IllegalArgumentException("Size must be > 0");
         }
         this.bias = bias;
@@ -86,6 +87,20 @@ public class Layer implements Serializable {
                 initializationFunction.initialize(network.getPreviousLayer(this), n.getConnectionWith(t));
             }
         }));
+    }
+
+    public void feedforward(Layer next) {
+        for (Neuron nextNeuron : next.getNeurons()) {
+            double sum = 0.0D;
+
+            if (nextNeuron instanceof BiasNeuron) continue;
+
+            for (Neuron current : neurons) {
+                final NeuronConnection connection = current.getConnectionWith(nextNeuron);
+                sum += (current.getValue() * connection.getWeight());
+            }
+            nextNeuron.setValue(activationFunction.activate(sum));
+        }
     }
 
     public final int getSize() {

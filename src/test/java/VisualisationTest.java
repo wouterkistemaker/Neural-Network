@@ -2,6 +2,9 @@ import nl.wouterkistemaker.neuralnetwork.NeuralNetwork;
 import nl.wouterkistemaker.neuralnetwork.function.initialization.XavierInitialization;
 import nl.wouterkistemaker.neuralnetwork.layer.Layer;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 /*
   Copyright (C) 2020-2021, Wouter Kistemaker.
   This program is free software: you can redistribute it and/or modify
@@ -25,10 +28,19 @@ public class VisualisationTest {
         final Layer hiddenLayer4 = new Layer(8, false, new XavierInitialization());
         final Layer hiddenLayer5 = new Layer(8, true, new XavierInitialization());
         final Layer hiddenLayer6 = new Layer(8, true, new XavierInitialization());
-        final Layer hiddenLayer7 = new Layer(8, false, new XavierInitialization());
+        final Layer hiddenLayer7 = new Layer(2, false, new XavierInitialization());
         final Layer outputLayer = new Layer(1);
 
         final NeuralNetwork network = new NeuralNetwork(inputLayer, hiddenLayer, hiddenLayer2, hiddenLayer3, hiddenLayer4, hiddenLayer5, hiddenLayer6, hiddenLayer7, outputLayer);
         network.visualize();
+
+        final Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println("About to draw again");
+                network.feedforward();
+            }
+        }, 5000);
     }
 }

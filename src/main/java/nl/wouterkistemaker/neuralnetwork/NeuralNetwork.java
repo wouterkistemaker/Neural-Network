@@ -5,7 +5,9 @@ import nl.wouterkistemaker.neuralnetwork.visualisation.NeuralNetworkFrame;
 import nl.wouterkistemaker.neuralnetwork.visualisation.NeuralNetworkPanel;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 /*
   Copyright (C) 2020-2021, Wouter Kistemaker.
@@ -23,9 +25,11 @@ import java.util.*;
 public final class NeuralNetwork implements Serializable {
 
     private static final long serialVersionUID = 3314104889598862062L;
-    private final Set<Layer> layers;
+    private final List<Layer> layers;
 
     private boolean connected; // boolean signalling whether or not the layers are yet interconnected
+
+    private NeuralNetworkFrame frame;
 
     /**
      * Constructs a new NeuralNetwork instance containing the specified {@link Layer layers}
@@ -34,15 +38,27 @@ public final class NeuralNetwork implements Serializable {
      */
     public NeuralNetwork(Layer... layers) {
         this.connected = false;
-        this.layers = new LinkedHashSet<>(Arrays.asList(layers));
+        this.layers = new LinkedList<>(Arrays.asList(layers));
         this.layers.forEach(l -> l.setNetworkInstance(this));
         this.connect();
     }
 
     public Layer getPreviousLayer(Layer current) {
-        List<Layer> list = new LinkedList<>(layers);
-        final int index = list.indexOf(current);
-        return (index - 1) < 0 ? current : list.get(index - 1);
+        final int index = layers.indexOf(current);
+        return (index - 1) < 0 ? current : layers.get(index - 1);
+    }
+
+    public void feedforward() {
+        for (int i = 0; i < layers.size(); i++) {
+            if (i + 1 >= layers.size()) return;
+
+            final Layer current = layers.get(i);
+            final Layer next = layers.get(i + 1);
+
+            current.feedforward(next);
+        }
+
+        if (this.frame != null) this.frame.update();
     }
 
     /**
@@ -51,13 +67,13 @@ public final class NeuralNetwork implements Serializable {
      */
     private void connect() {
         if (connected) return;
+        for (int i = 0; i < layers.size(); i++) {
+            if (i + 1 >= layers.size()) return; // last layer
 
-        final Layer[] layerArray = layers.toArray(new Layer[0]);
-        for (int i = 0; i < layerArray.length; i++) {
-            Layer current = layerArray[i];
-            if ((i + 1) >= layerArray.length) return;
-            Layer next = layerArray[i + 1];
-            current.connect(next);
+            final Layer layer = layers.get(i);
+            final Layer next = layers.get(i + 1);
+
+            layer.connect(next);
         }
         connected = true;
     }
@@ -66,13 +82,15 @@ public final class NeuralNetwork implements Serializable {
      * Helper function that creates a comprehensible overview of this network's architecture
      */
     public final void visualize() {
-        new NeuralNetworkFrame(new NeuralNetworkPanel(this));
+        if (this.frame == null) {
+            this.frame = new NeuralNetworkFrame(new NeuralNetworkPanel(this));
+        }
     }
 
     /**
-     * @return a {@link LinkedHashSet} of {@link Layer layers}
+     * @return a {@link LinkedList} of {@link Layer layers}
      */
-    public Set<Layer> getLayers() {
+    public List<Layer> getLayers() {
         return layers;
     }
 }

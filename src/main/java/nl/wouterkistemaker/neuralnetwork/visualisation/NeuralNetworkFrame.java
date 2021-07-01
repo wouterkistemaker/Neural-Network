@@ -47,8 +47,8 @@ public final class NeuralNetworkFrame extends JFrame {
         });
     }
 
-    public void update() {
-        panel.repaint();
+    public synchronized void update() {
+        System.out.println("Updating...");
     }
 
     public NeuralNetworkFrame() {

@@ -49,6 +49,8 @@ public final class NeuralNetwork implements Serializable {
     }
 
     public void feedforward() {
+//        if (this.frame != null) this.frame.update();
+
         for (int i = 0; i < layers.size(); i++) {
             if (i + 1 >= layers.size()) return;
 
@@ -57,8 +59,6 @@ public final class NeuralNetwork implements Serializable {
 
             current.feedforward(next);
         }
-
-        if (this.frame != null) this.frame.update();
     }
 
     /**
@@ -84,6 +84,8 @@ public final class NeuralNetwork implements Serializable {
     public final void visualize() {
         if (this.frame == null) {
             this.frame = new NeuralNetworkFrame(new NeuralNetworkPanel(this));
+        } else {
+            this.frame.update();
         }
     }
 

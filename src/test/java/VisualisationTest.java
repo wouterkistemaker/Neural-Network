@@ -2,8 +2,9 @@ import nl.wouterkistemaker.neuralnetwork.NeuralNetwork;
 import nl.wouterkistemaker.neuralnetwork.function.initialization.XavierInitialization;
 import nl.wouterkistemaker.neuralnetwork.layer.Layer;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /*
   Copyright (C) 2020-2021, Wouter Kistemaker.
@@ -21,7 +22,7 @@ import java.util.TimerTask;
 public class VisualisationTest {
 
     public static void main(String[] args) {
-        final Layer inputLayer = new Layer(2,false, new XavierInitialization());
+        final Layer inputLayer = new Layer(2, false, new XavierInitialization());
         final Layer hiddenLayer = new Layer(10, false, new XavierInitialization());
         final Layer hiddenLayer2 = new Layer(25, false, new XavierInitialization());
         final Layer hiddenLayer3 = new Layer(8, true, new XavierInitialization());
@@ -32,15 +33,13 @@ public class VisualisationTest {
         final Layer outputLayer = new Layer(1);
 
         final NeuralNetwork network = new NeuralNetwork(inputLayer, hiddenLayer, hiddenLayer2, hiddenLayer3, hiddenLayer4, hiddenLayer5, hiddenLayer6, hiddenLayer7, outputLayer);
-        network.visualize();
+        final ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
 
-        final Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                System.out.println("About to draw again");
-                network.feedforward();
-            }
-        }, 5000);
+//        network.visualize();
+
+        service.scheduleAtFixedRate(() -> {
+            network.visualize();
+            network.feedforward(); // Maybe this needs a different timing.
+        }, 0, 16, TimeUnit.MILLISECONDS);
     }
 }

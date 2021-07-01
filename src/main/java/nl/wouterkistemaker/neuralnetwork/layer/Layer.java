@@ -121,6 +121,9 @@ public class Layer implements Serializable {
 
     @Deprecated
     public void setNetworkInstance(NeuralNetwork network) {
+        if (this.network != null) {
+            throw new IllegalStateException("The instance can only be set once");
+        }
         this.network = network;
     }
 }

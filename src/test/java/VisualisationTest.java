@@ -39,7 +39,7 @@ public class VisualisationTest {
         final ScheduledExecutorService service = Executors.newScheduledThreadPool(8);
         service.scheduleAtFixedRate(network::feedforward, 3,200, TimeUnit.MILLISECONDS);
     }
-//
+
 //    public static void main(String[] args) {
 //        final Layer input = new Layer(2, false, new XavierInitialization());
 //        final Layer output = new Layer(1, false, new XavierInitialization());

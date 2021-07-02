@@ -150,6 +150,4 @@ public class Layer implements Serializable {
             throw new IllegalStateException("NeuralNetwork instance is missing");
         }
     }
-
-
 }

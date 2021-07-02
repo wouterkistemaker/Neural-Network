@@ -15,7 +15,9 @@ package nl.wouterkistemaker.neuralnetwork.neuron;
 */
 
 import nl.wouterkistemaker.neuralnetwork.NetworkUtility;
+import nl.wouterkistemaker.neuralnetwork.NeuralNetwork;
 import nl.wouterkistemaker.neuralnetwork.exception.NoSuchConnectionException;
+import nl.wouterkistemaker.neuralnetwork.function.error.CostFunction;
 
 import java.io.Serializable;
 import java.util.*;
@@ -29,6 +31,7 @@ public class Neuron implements Serializable {
     private static final long serialVersionUID = 6952458116227426483L;
     private final UUID id;
     private double value;
+    private double error;
     private final Set<NeuronConnection> connections;
 
     /**
@@ -118,6 +121,32 @@ public class Neuron implements Serializable {
      */
     public void setValue(double value) {
         this.value = value;
+    }
+
+    /**
+     * Returns the error of this neuron, which is the output of the
+     * {@link CostFunction} applied to this neuron's value and
+     * the target output of this neuron
+     *
+     * @return the error
+     */
+    public double getError() {
+        return error;
+    }
+
+    /**
+     * Sets the error of this neuron, which is the output of the
+     * {@link CostFunction} applied to this neuron's value and
+     * the target output of this neuron
+     *
+     * @deprecated because this is a very important function
+     * that may fail the whole {@link NeuralNetwork} and its
+     * training process if used incorrectly, therefore caution is required,
+     * hence is it has been deprecated
+     */
+    @Deprecated
+    public void setError(double error) {
+        this.error = error;
     }
 
     @Override

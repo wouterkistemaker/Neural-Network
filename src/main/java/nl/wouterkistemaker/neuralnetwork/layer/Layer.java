@@ -1,8 +1,8 @@
 package nl.wouterkistemaker.neuralnetwork.layer;
 
 import nl.wouterkistemaker.neuralnetwork.NeuralNetwork;
-import nl.wouterkistemaker.neuralnetwork.function.error.ErrorFunction;
-import nl.wouterkistemaker.neuralnetwork.function.error.MeanSquaredError;
+import nl.wouterkistemaker.neuralnetwork.function.error.CostFunction;
+import nl.wouterkistemaker.neuralnetwork.function.error.MeanSquaredCost;
 import nl.wouterkistemaker.neuralnetwork.function.initialization.InitializationFunction;
 import nl.wouterkistemaker.neuralnetwork.function.initialization.RandomInitialization;
 import nl.wouterkistemaker.neuralnetwork.function.transfer.SigmoidTransfer;
@@ -36,7 +36,7 @@ public class Layer implements Serializable {
 
     private static final InitializationFunction DEFAULT_INITIALIZATION_FUNCTION = new RandomInitialization();
     private static final TransferFunction DEFAULT_ACTIVATION_FUNCTION = new SigmoidTransfer();
-    private static final ErrorFunction DEFAULT_ERROR_FUNCTION = new MeanSquaredError();
+    private static final CostFunction DEFAULT_ERROR_FUNCTION = new MeanSquaredCost();
 
     private final boolean bias;
     private final Set<Neuron> neurons;
@@ -44,9 +44,9 @@ public class Layer implements Serializable {
 
     private final InitializationFunction initializationFunction;
     private final TransferFunction transferFunction;
-    private final ErrorFunction errorFunction;
+    private final CostFunction costFunction;
 
-    public Layer(int size, boolean bias, InitializationFunction initializationFunction, TransferFunction transferFunction, ErrorFunction errorFunction) {
+    public Layer(int size, boolean bias, InitializationFunction initializationFunction, TransferFunction transferFunction, CostFunction costFunction) {
         if (size < 0) {
             throw new IllegalArgumentException("Size must be > 0");
         }
@@ -55,7 +55,7 @@ public class Layer implements Serializable {
 
         this.initializationFunction = initializationFunction == null ? DEFAULT_INITIALIZATION_FUNCTION : initializationFunction;
         this.transferFunction = transferFunction == null ? DEFAULT_ACTIVATION_FUNCTION : transferFunction;
-        this.errorFunction = errorFunction == null ? DEFAULT_ERROR_FUNCTION : errorFunction;
+        this.costFunction = costFunction == null ? DEFAULT_ERROR_FUNCTION : costFunction;
 
         for (int i = 0; i < size; i++) {
             this.neurons.add(new Neuron(true));
@@ -95,6 +95,10 @@ public class Layer implements Serializable {
         for (Neuron nextNeuron : next.getNeurons()) {
             double sum = 0.0D;
 
+            /*
+            This ensures that no NPE can occur, since previous neurons are not connected to the next Bias Neurons
+            The Bias Neurons of the current layer, however, are very much included in the process of feeding forward.
+             */
             if (nextNeuron instanceof BiasNeuron) continue;
 
             for (Neuron current : neurons) {
@@ -119,6 +123,18 @@ public class Layer implements Serializable {
 
     public final Set<Neuron> getNeurons() {
         return neurons;
+    }
+
+    public final CostFunction getCostFunction() {
+        return costFunction;
+    }
+
+    public final TransferFunction getTransferFunction() {
+        return transferFunction;
+    }
+
+    public final InitializationFunction getInitializationFunction() {
+        return initializationFunction;
     }
 
     @Deprecated

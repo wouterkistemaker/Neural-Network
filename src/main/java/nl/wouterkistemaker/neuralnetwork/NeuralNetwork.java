@@ -40,14 +40,32 @@ public final class NeuralNetwork implements Serializable {
     public NeuralNetwork(Layer... layers) {
         this.id = UUID.randomUUID();
         this.connected = false;
+
+        if (layers.length != 0) {
+            final Layer outputLayer = layers[layers.length - 1];
+            if (outputLayer.hasBias()){
+                outputLayer.getNeurons().remove(outputLayer.getBiasNeuron());
+                System.out.println("The output-layer cannot have a bias-neuron, therefore it has been removed!");
+            }
+        }
+
         this.layers = new LinkedList<>(Arrays.asList(layers));
         this.layers.forEach(l -> l.setNetworkInstance(this));
+
         this.connect();
     }
 
     public final Layer getPreviousLayer(Layer current) {
         final int index = layers.indexOf(current);
         return (index - 1) < 0 ? current : layers.get(index - 1);
+    }
+
+    public final boolean isLastLayer(Layer layer) {
+        return layers.indexOf(layer) == layers.size() - 1;
+    }
+
+    public final boolean isFirstLayer(Layer layer) {
+        return layers.indexOf(layer) == 0;
     }
 
     public final void feedforward() {

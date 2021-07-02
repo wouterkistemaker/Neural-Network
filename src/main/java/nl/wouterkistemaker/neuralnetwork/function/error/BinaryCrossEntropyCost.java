@@ -1,4 +1,6 @@
-package nl.wouterkistemaker.neuralnetwork.function.error;/*
+package nl.wouterkistemaker.neuralnetwork.function.error;
+
+/*
   Copyright (C) 2020-2021, Wouter Kistemaker.
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published
@@ -11,15 +13,18 @@ package nl.wouterkistemaker.neuralnetwork.function.error;/*
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+public final class BinaryCrossEntropyCost implements CostFunction {
 
-import java.io.Serializable;
+    @Override
+    public double computeError(double output, double target) {
+        // https://youtu.be/gIx974WtVb4?t=173
+        // L = t(lnO) + (1-t)ln(1-O)
 
-/**
- * Function that determines the offset between the output of a neuron
- * and the expected output of that same neuron in a implementation-specific fashion
- */
-public interface ErrorFunction extends Serializable {
+        if (output == 1 || output == 0){
+            throw new IllegalStateException("Error cannot be computed for this output");
+        }
 
-    double computeError(double output, double target);
-
+        // Where output is variable and target is a constant
+        return target * Math.log(output) + (1 - target) * Math.log(1 - output);
+    }
 }

@@ -1,6 +1,4 @@
-package nl.wouterkistemaker.neuralnetwork.function.error;
-
-/*
+package nl.wouterkistemaker.neuralnetwork.function.error;/*
   Copyright (C) 2020-2021, Wouter Kistemaker.
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published
@@ -13,12 +11,15 @@ package nl.wouterkistemaker.neuralnetwork.function.error;
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-public class MeanSquaredError implements ErrorFunction {
-    private static final long serialVersionUID = 2849768808769971195L;
 
-    @Override
-    public double computeError(double output, double target) {
-        return Math.pow(output - target, 2);
-    }
+import java.io.Serializable;
+
+/**
+ * Function that determines the offset between the output of a neuron
+ * and the expected output of that same neuron in a implementation-specific fashion
+ */
+public interface CostFunction extends Serializable {
+
+    double computeError(double output, double target);
 
 }

@@ -43,8 +43,8 @@ public final class NeuralNetwork implements Serializable {
 
         if (layers.length != 0) {
             final Layer outputLayer = layers[layers.length - 1];
-            if (outputLayer.hasBias()){
-                outputLayer.getNeurons().remove(outputLayer.getBiasNeuron());
+            if (outputLayer.hasBias()) {
+                layers[layers.length - 1] = new Layer(outputLayer.getSize(), false, outputLayer.getInitializationFunction(), outputLayer.getTransferFunction(), outputLayer.getCostFunction());
                 System.out.println("The output-layer cannot have a bias-neuron, therefore it has been removed!");
             }
         }

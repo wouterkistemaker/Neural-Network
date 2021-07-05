@@ -94,7 +94,7 @@ public final class NeuralNetworkPanel extends JPanel {
     }
 
     private void drawNeuron(Graphics graphic, GraphicNeuron neuron) {
-        graphic.setColor(neuron.neuron instanceof BiasNeuron ? Color.CYAN : Color.PINK);
+        graphic.setColor(neuron.layer.hasBias() ? Color.CYAN : Color.PINK);
         graphic.fillOval(neuron.getX(), neuron.getY(), actualSize, actualSize);
         graphic.setColor(Color.BLACK);
         graphic.drawString(String.format("%.2f", neuron.getNeuron().getValue()), neuron.getCenterX() - 10, neuron.getCenterY() + 10);
@@ -124,9 +124,9 @@ public final class NeuralNetworkPanel extends JPanel {
         createGraphicNeurons();
 
         graphic.setColor(Color.WHITE);
-        graphic.fillRect(getWidth() - 125, getY(), 125, 50 + layers.size() * 25);
+        graphic.fillRect(getWidth() - 125, getY(), 125, 75 + layers.size() * 25);
         graphic.setColor(Color.RED);
-        graphic.drawRect(getWidth() - 125, getY(), 125, 50 + layers.size() * 25);
+        graphic.drawRect(getWidth() - 125, getY(), 125, 75 + layers.size() * 25);
 
         for (int i = 0; i < layers.size(); i++) {
             graphic.setColor(Color.BLACK);
@@ -138,7 +138,8 @@ public final class NeuralNetworkPanel extends JPanel {
             graphicNeurons.forEach(gn -> this.drawNeuron(graphic, gn));
         }
 
-        graphic.drawString(String.format("Connections: %s", graphicNeuronConnections.size()), getWidth()-115, 25 + layers.size()*25);
+        graphic.drawString(String.format("Connections: %s", graphicNeuronConnections.size()), getWidth() - 115, 25 + layers.size() * 25);
+        graphic.drawString(String.format("Biases: %s", layers.stream().filter(Layer::hasBias).mapToInt(Layer::getSize).sum()), getWidth() - 115, 50 + layers.size() * 25);
 
         graphic.dispose(); // Not sure if this is necessary so can be removed if this causes breaks of the system.
     }

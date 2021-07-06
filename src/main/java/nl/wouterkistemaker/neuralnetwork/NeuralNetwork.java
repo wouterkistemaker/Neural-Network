@@ -166,6 +166,10 @@ public final class NeuralNetwork implements Serializable {
         return layers;
     }
 
+    public final double[] getOutput() {
+        return layers.get(layers.size() - 1).getOutput();
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(id);

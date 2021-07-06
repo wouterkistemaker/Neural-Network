@@ -86,5 +86,6 @@ public class ObjectTests {
 
         System.out.println(Arrays.toString(input.getOutput()));
         System.out.println(Arrays.toString(output.getOutput()));
+        System.out.println(Arrays.toString(network.getOutput()));
     }
 }

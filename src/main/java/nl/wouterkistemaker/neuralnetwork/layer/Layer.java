@@ -155,11 +155,16 @@ public class Layer implements Serializable {
         return initializationFunction;
     }
 
+    public final double getCost() {
+
+        return getNeurons().stream().mapToDouble(Neuron::getError).sum();
+    }
+
     public final double[] getOutput() {
         double[] output = new double[this.neurons.size()];
 
         for (int i = 0; i < output.length; i++) {
-            output[i]=neurons.get(i).getValue();
+            output[i] = neurons.get(i).getValue();
         }
 
         return output;

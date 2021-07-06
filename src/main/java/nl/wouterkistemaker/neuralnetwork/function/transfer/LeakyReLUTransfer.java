@@ -1,4 +1,4 @@
-package nl.wouterkistemaker.neuralnetwork.function.error;
+package nl.wouterkistemaker.neuralnetwork.function.transfer;
 
 /*
   Copyright (C) 2020-2021, Wouter Kistemaker.
@@ -13,23 +13,16 @@ package nl.wouterkistemaker.neuralnetwork.function.error;
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-public final class BinaryCrossEntropyCost implements CostFunction {
+public final class LeakyReLUTransfer implements TransferFunction {
 
     @Override
-    public double apply(double output, double target) {
-        // https://youtu.be/gIx974WtVb4?t=173
-        // L = t(lnO) + (1-t)ln(1-O)
-
-        if (output == 1 || output == 0){
-            throw new IllegalStateException("Error cannot be computed for this output");
-        }
-
-        // Where output is variable and target is a constant
-        return target * Math.log(output) + (1 - target) * Math.log(1 - output);
+    public double apply(double wSum) {
+        if (wSum > 0) return wSum;
+        return 0.01 * wSum;
     }
 
     @Override
-    public double applyDerivative(double output, double target) {
-        return 0;
+    public double applyDerivative(double wSum) {
+        return (wSum > 0) ? 1 : 0.01;
     }
 }

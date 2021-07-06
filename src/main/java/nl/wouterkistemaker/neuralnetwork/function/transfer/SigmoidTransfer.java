@@ -17,7 +17,12 @@ public final class SigmoidTransfer implements TransferFunction {
     private static final long serialVersionUID = 2684630499328743102L;
 
     @Override
-    public double activate(double wSum) {
+    public double apply(double wSum) {
         return ((1 / (1 + Math.exp(-wSum))));
+    }
+
+    @Override
+    public double applyDerivative(double wSum) {
+        return apply(wSum) * (1 - apply(wSum));
     }
 }

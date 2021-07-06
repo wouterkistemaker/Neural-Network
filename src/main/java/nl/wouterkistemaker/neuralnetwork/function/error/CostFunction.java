@@ -20,6 +20,8 @@ import java.io.Serializable;
  */
 public interface CostFunction extends Serializable {
 
-    double computeError(double output, double target);
+    double apply(double output, double target);
+
+    double applyDerivative(double output, double target);
 
 }

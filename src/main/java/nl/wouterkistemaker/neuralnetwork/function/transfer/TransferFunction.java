@@ -19,6 +19,9 @@ import java.io.Serializable;
  */
 public interface TransferFunction extends Serializable {
 
-    double activate(double wSum);
+    double apply(double wSum);
+
+    double applyDerivative(double wSum);
+
 
 }

@@ -17,8 +17,13 @@ public final class MeanSquaredCost implements CostFunction {
     private static final long serialVersionUID = 2849768808769971195L;
 
     @Override
-    public double computeError(double output, double target) {
+    public double apply(double output, double target) {
         return Math.pow(output - target, 2);
+    }
+
+    @Override
+    public double applyDerivative(double output, double target) {
+        return 2 * (output - target);
     }
 
 }

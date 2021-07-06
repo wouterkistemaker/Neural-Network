@@ -1,10 +1,14 @@
 import nl.wouterkistemaker.neuralnetwork.NeuralNetwork;
+import nl.wouterkistemaker.neuralnetwork.function.initialization.RandomInitialization;
 import nl.wouterkistemaker.neuralnetwork.function.initialization.XavierInitialization;
+import nl.wouterkistemaker.neuralnetwork.layer.InputLayer;
 import nl.wouterkistemaker.neuralnetwork.layer.Layer;
 import nl.wouterkistemaker.neuralnetwork.neuron.BiasNeuron;
 import nl.wouterkistemaker.neuralnetwork.neuron.Neuron;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
 
 /*
   Copyright (C) 2020-2021, Wouter Kistemaker.
@@ -67,5 +71,20 @@ public class ObjectTests {
         final Neuron outputNeuronCopy = (Neuron) copy.getLayers().get(copy.getLayers().size() - 1).getNeurons().toArray()[0];
 
         Assertions.assertEquals(outputNeuron, outputNeuronCopy);
+    }
+
+    @Test
+    public void testFeedForward() {
+
+        final InputLayer input = new InputLayer(2, false, new RandomInitialization());
+        final Layer output = new Layer(1, false, new XavierInitialization());
+
+        final NeuralNetwork network = new NeuralNetwork(input, output);
+
+        input.setInput(new double[]{0.1, 0.6});
+        network.feedforward();
+
+        System.out.println(Arrays.toString(input.getOutput()));
+        System.out.println(Arrays.toString(output.getOutput()));
     }
 }

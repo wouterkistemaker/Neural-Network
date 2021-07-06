@@ -38,13 +38,8 @@ public class Layer implements Serializable {
     private static final CostFunction DEFAULT_ERROR_FUNCTION = new MeanSquaredCost();
 
     private final boolean bias;
-    private final Set<Neuron> neurons;
+    private final List<Neuron> neurons;
     private final Map<Neuron, BiasNeuron> biasNeurons;
-
-    /**
-     * TODO RESEARCH FOR HOW BIASES ACTUALLY WORK (VALUE STAYS THE SAME AND WEIGHT CHANGES RIGHT, EDIT: YEP CORRECT) IMPLEMENT WEIGHTS HERE TOO BECAUSE CONNECTION DOES NOT EXIST.
-     * TODO IN THE WEIGHTED SUM WE MUST ADD THE BIAS-WEIGHT SINCE BIAS-VALUE IS 1 AND ON BACKPROPAGATION WE HAVE TO ALTER THE WEIGHT OF THE BIAS TO EACH NEURON.
-     */
 
     private final InitializationFunction initializationFunction;
     private final TransferFunction transferFunction;
@@ -55,7 +50,7 @@ public class Layer implements Serializable {
             throw new IllegalArgumentException("Size must be > 0");
         }
         this.bias = bias;
-        this.neurons = new LinkedHashSet<>(size);
+        this.neurons = new LinkedList<>();
         this.biasNeurons = new HashMap<>();
 
         this.initializationFunction = initializationFunction == null ? DEFAULT_INITIALIZATION_FUNCTION : initializationFunction;
@@ -111,17 +106,7 @@ public class Layer implements Serializable {
         this.checkNetworkInstance();
         for (Neuron nextNeuron : next.getNeurons()) {
 
-            if (next.hasBias(nextNeuron)) {
-                final BiasNeuron biasNeuron = next.getBias(nextNeuron);
-                final NeuronConnection connection = biasNeuron.getConnectionWith(nextNeuron);
-                Objects.requireNonNull(biasNeuron);
-                Objects.requireNonNull(connection);
-
-            }
-
             double sum = next.hasBias(nextNeuron) ? next.getBias(nextNeuron).getConnectionWith(nextNeuron).getWeight() : 0;
-
-            System.out.println("Sum=" + sum);
 
             /*
             This ensures that no NPE can occur, since previous neurons are not connected to the next Bias Neurons
@@ -134,7 +119,7 @@ public class Layer implements Serializable {
                 sum += (current.getValue() * connection.getWeight());
             }
 
-            nextNeuron.setValue(transferFunction.activate(sum));
+            nextNeuron.setValue(transferFunction.apply(sum));
         }
     }
 
@@ -154,8 +139,8 @@ public class Layer implements Serializable {
         return bias;
     }
 
-    public final Set<Neuron> getNeurons() {
-        return Collections.unmodifiableSet(this.neurons);
+    public final List<Neuron> getNeurons() {
+        return Collections.unmodifiableList(this.neurons);
     }
 
     public final CostFunction getCostFunction() {
@@ -168,6 +153,16 @@ public class Layer implements Serializable {
 
     public final InitializationFunction getInitializationFunction() {
         return initializationFunction;
+    }
+
+    public final double[] getOutput() {
+        double[] output = new double[this.neurons.size()];
+
+        for (int i = 0; i < output.length; i++) {
+            output[i]=neurons.get(i).getValue();
+        }
+
+        return output;
     }
 
     private boolean hasBias(Neuron n) {

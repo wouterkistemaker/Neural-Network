@@ -21,4 +21,8 @@ public final class BiasNeuron extends Neuron {
         super(1);
     }
 
+    @Override
+    public void setValue(double value) {
+        throw new UnsupportedOperationException("Bias value is always 1");
+    }
 }

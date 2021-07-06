@@ -87,6 +87,9 @@ public class Neuron implements Serializable {
         if (optional.isEmpty()) {
             System.err.println("Potential algorithm break (!)");
 
+            final RuntimeException exception = new RuntimeException();
+            System.out.println(exception.getStackTrace()[1]);
+
             return connections.stream().filter(c -> c.getFrom().equals(other)).findFirst().orElseThrow(NoSuchConnectionException::new);
         }
 

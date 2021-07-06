@@ -12,8 +12,7 @@ import nl.wouterkistemaker.neuralnetwork.neuron.Neuron;
 import nl.wouterkistemaker.neuralnetwork.neuron.NeuronConnection;
 
 import java.io.Serializable;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 /*
   Copyright (C) 2020-2021, Wouter Kistemaker.
@@ -40,7 +39,12 @@ public class Layer implements Serializable {
 
     private final boolean bias;
     private final Set<Neuron> neurons;
-    private BiasNeuron biasNeuron;
+    private final Map<Neuron, BiasNeuron> biasNeurons;
+
+    /**
+     * TODO RESEARCH FOR HOW BIASES ACTUALLY WORK (VALUE STAYS THE SAME AND WEIGHT CHANGES RIGHT, EDIT: YEP CORRECT) IMPLEMENT WEIGHTS HERE TOO BECAUSE CONNECTION DOES NOT EXIST.
+     * TODO IN THE WEIGHTED SUM WE MUST ADD THE BIAS-WEIGHT SINCE BIAS-VALUE IS 1 AND ON BACKPROPAGATION WE HAVE TO ALTER THE WEIGHT OF THE BIAS TO EACH NEURON.
+     */
 
     private final InitializationFunction initializationFunction;
     private final TransferFunction transferFunction;
@@ -51,7 +55,8 @@ public class Layer implements Serializable {
             throw new IllegalArgumentException("Size must be > 0");
         }
         this.bias = bias;
-        this.neurons = new LinkedHashSet<>(size + (bias ? 1 : 0));
+        this.neurons = new LinkedHashSet<>(size);
+        this.biasNeurons = new HashMap<>();
 
         this.initializationFunction = initializationFunction == null ? DEFAULT_INITIALIZATION_FUNCTION : initializationFunction;
         this.transferFunction = transferFunction == null ? DEFAULT_ACTIVATION_FUNCTION : transferFunction;
@@ -61,7 +66,9 @@ public class Layer implements Serializable {
             this.neurons.add(new Neuron(true));
         }
 
-        if (bias) this.neurons.add((biasNeuron = new BiasNeuron()));
+        if (bias) {
+            this.neurons.forEach(n -> biasNeurons.put(n, new BiasNeuron()));
+        }
     }
 
     public Layer(int size, boolean bias, InitializationFunction initializationFunction, TransferFunction transferFunction) {
@@ -82,18 +89,39 @@ public class Layer implements Serializable {
 
     public void connect(Layer target) {
         this.checkNetworkInstance();
-        neurons.forEach(n -> target.neurons.forEach(t -> {
-            if (!(t instanceof BiasNeuron)) {
-                n.connect(t);
-                initializationFunction.initialize(network.getPreviousLayer(this), n.getConnectionWith(t));
+
+        neurons.forEach(n -> {
+
+            if (hasBias(n)) {
+                final BiasNeuron bias = this.getBias(n);
+                bias.connect(n);
+                this.initializationFunction.initialize(network.getPreviousLayer(this), bias.getConnectionWith(n));
             }
-        }));
+
+            target.neurons.forEach(t -> {
+                if (!(t instanceof BiasNeuron)) {
+                    n.connect(t);
+                    initializationFunction.initialize(network.getPreviousLayer(this), n.getConnectionWith(t));
+                }
+            });
+        });
     }
 
     public void feedforward(Layer next) {
         this.checkNetworkInstance();
         for (Neuron nextNeuron : next.getNeurons()) {
-            double sum = 0.0D;
+
+            if (next.hasBias(nextNeuron)) {
+                final BiasNeuron biasNeuron = next.getBias(nextNeuron);
+                final NeuronConnection connection = biasNeuron.getConnectionWith(nextNeuron);
+                Objects.requireNonNull(biasNeuron);
+                Objects.requireNonNull(connection);
+
+            }
+
+            double sum = next.hasBias(nextNeuron) ? next.getBias(nextNeuron).getConnectionWith(nextNeuron).getWeight() : 0;
+
+            System.out.println("Sum=" + sum);
 
             /*
             This ensures that no NPE can occur, since previous neurons are not connected to the next Bias Neurons
@@ -102,9 +130,10 @@ public class Layer implements Serializable {
             if (nextNeuron instanceof BiasNeuron) continue;
 
             for (Neuron current : neurons) {
-                final NeuronConnection connection = current.getConnectionWith(nextNeuron);
+                final NeuronConnection connection = current.getConnectionWith(nextNeuron); // Connection of current neuron with next neuron
                 sum += (current.getValue() * connection.getWeight());
             }
+
             nextNeuron.setValue(transferFunction.activate(sum));
         }
     }
@@ -113,16 +142,20 @@ public class Layer implements Serializable {
         return neurons.size();
     }
 
+    /**
+     * @return whether or not the neurons in this layer have a bias-term
+     * @deprecated For now this function works because if the layer has a bias-term enabled, this
+     * means that each neuron in the layer has a bias-term but this will likely be
+     * changed in the future, where specific amounts of neurons can be biased rather
+     * than the whole layer.
+     */
+    @Deprecated(forRemoval = true)
     public final boolean hasBias() {
         return bias;
     }
 
-    public BiasNeuron getBiasNeuron() {
-        return biasNeuron;
-    }
-
     public final Set<Neuron> getNeurons() {
-        return neurons;
+        return Collections.unmodifiableSet(this.neurons);
     }
 
     public final CostFunction getCostFunction() {
@@ -135,6 +168,17 @@ public class Layer implements Serializable {
 
     public final InitializationFunction getInitializationFunction() {
         return initializationFunction;
+    }
+
+    private boolean hasBias(Neuron n) {
+        return this.biasNeurons.containsKey(n);
+    }
+
+    private BiasNeuron getBias(Neuron n) {
+        if (!hasBias(n)) {
+            throw new IllegalStateException("This neuron does not have a bias");
+        }
+        return this.biasNeurons.get(n);
     }
 
     @Deprecated

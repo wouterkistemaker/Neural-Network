@@ -20,17 +20,23 @@ import java.util.concurrent.TimeUnit;
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+
 public class VisualisationTest {
 
-
     public static void main(String[] args) {
+//        execute0();
+//        execute1();
+        execute2();
+    }
+
+    private static void execute0(){
         final Layer inputLayer = new Layer(2, false, new XavierInitialization());
         final Layer hiddenLayer = new Layer(10, false, new XavierInitialization());
-        final Layer hiddenLayer2 = new Layer(25, false, new XavierInitialization());
-        final Layer hiddenLayer3 = new Layer(8, true, new XavierInitialization());
+        final Layer hiddenLayer2 = new Layer(25, true, new XavierInitialization());
+        final Layer hiddenLayer3 = new Layer(8, false, new XavierInitialization());
         final Layer hiddenLayer4 = new Layer(8, false, new XavierInitialization());
-        final Layer hiddenLayer5 = new Layer(8, true, new XavierInitialization());
-        final Layer hiddenLayer6 = new Layer(8, true, new XavierInitialization());
+        final Layer hiddenLayer5 = new Layer(8, false, new XavierInitialization());
+        final Layer hiddenLayer6 = new Layer(8, false, new XavierInitialization());
         final Layer hiddenLayer7 = new Layer(2, false, new XavierInitialization());
         final Layer outputLayer = new Layer(1,true);
 
@@ -41,19 +47,33 @@ public class VisualisationTest {
         service.scheduleAtFixedRate(network::feedforward, 3000,200, TimeUnit.MILLISECONDS);
     }
 
-//    public static void main(String[] args) {
-//        final Layer input = new Layer(2, false, new XavierInitialization());
-//        final Layer output = new Layer(1, false, new XavierInitialization());
-//        final NeuralNetwork network = new NeuralNetwork(input, output);
-//
-//        network.save();
-//        network.visualize();
-//
-//        final NeuralNetwork copy = NeuralNetwork.load();
-//
-//        final Layer outputCopy = copy.getLayers().get(copy.getLayers().size() - 1);
-//        final Neuron outputNeuron = (Neuron) outputCopy.getNeurons().toArray()[0];
-//
-//        System.out.println("Output of the copy is " + outputNeuron.getValue()); // This is the same as the output of the actual output-neuron so saving & loading works ! :)
-//    }
+    private static void execute1(){
+        final Layer input = new Layer(2, false, new XavierInitialization());
+        final Layer output = new Layer(1, false, new XavierInitialization());
+        final NeuralNetwork network = new NeuralNetwork(input, output);
+
+        network.save();
+        network.visualize();
+
+        final NeuralNetwork copy = NeuralNetwork.load();
+
+        final Layer outputCopy = copy.getLayers().get(copy.getLayers().size() - 1);
+        final Neuron outputNeuron = (Neuron) outputCopy.getNeurons().toArray()[0];
+
+        System.out.println("Output of the copy is " + outputNeuron.getValue()); // This is the same as the output of the actual output-neuron so saving & loading works ! :)
+    }
+
+    private static void execute2() {
+
+        final Layer input = new Layer(2, false, new XavierInitialization());
+        final Layer hidden = new Layer(2, true, new XavierInitialization());
+        final Layer output = new Layer(1, false, new XavierInitialization());
+        final NeuralNetwork network = new NeuralNetwork(input, hidden, output);
+
+        network.visualize();
+
+        final ScheduledExecutorService service = Executors.newScheduledThreadPool(8);
+
+        service.schedule(network::feedforward, 2, TimeUnit.SECONDS);
+    }
 }

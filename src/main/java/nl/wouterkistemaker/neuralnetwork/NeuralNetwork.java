@@ -69,6 +69,7 @@ public final class NeuralNetwork implements Serializable {
     }
 
     public final void feedforward() {
+        System.out.println("Starting the forward propagation of the input");
         for (int i = 0; i < layers.size(); i++) {
             if (i + 1 >= layers.size()) break;
 

@@ -82,6 +82,11 @@ public final class NeuralNetwork implements Serializable {
         if (this.frame != null) this.frame.update();
     }
 
+    public final void propagateBackwards(double learningRate){
+        layers.get(layers.size()-1).propagateBackwards(learningRate);
+        if (this.frame != null) this.frame.update();
+    }
+
     /**
      * Function that initiates the process of connecting each individual
      * {@link Layer} to the next {@link Layer} in the network
@@ -170,8 +175,14 @@ public final class NeuralNetwork implements Serializable {
         return layers.get(layers.size() - 1).getOutput();
     }
 
+    public final double[] getTargetOutput() {
+        return new double[0];
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(id);
     }
+
+
 }

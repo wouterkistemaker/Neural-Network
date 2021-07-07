@@ -123,6 +123,36 @@ public class Layer implements Serializable {
         }
     }
 
+    public void propagateBackwards(double learningRate) {
+        if (network.isFirstLayer(this)) {
+            return;
+        }
+
+        final Layer previousLayer = network.getPreviousLayer(this);
+        // do some stuff
+
+        for (int k = 0; k < neurons.size(); k++) {
+            final Neuron neuron = neurons.get(k);
+            for (int j = 0; j < previousLayer.getNeurons().size(); j++) {
+                final Neuron previousNeuron = previousLayer.getNeurons().get(j);
+
+                // We compare the output of neuron K with target output for neuron K and apply the derivative of the cost function
+                final double costDerivative = costFunction.applyDerivative(neuron.getValue(), network.getTargetOutput()[k]);
+
+                // We apply the derivative of the transfer function to the weighted sum that determines the output of neuron K
+                final double transferDerivative = transferFunction.applyDerivative(neuron.getValue());
+
+                /* This is the adjustment that needs to made (after being multiplied with the learning-rate) to
+                the weight that connects the previous neuron J with the current neuron K
+                */
+                final double deltaWeight = costDerivative * transferDerivative * previousNeuron.getValue();
+
+                previousNeuron.getConnectionWith(neuron).adjustWeight(learningRate * deltaWeight);
+            }
+        }
+        previousLayer.propagateBackwards(learningRate);
+    }
+
     public final int getSize() {
         return neurons.size();
     }

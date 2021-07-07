@@ -1,6 +1,9 @@
 import nl.wouterkistemaker.neuralnetwork.NeuralNetwork;
 import nl.wouterkistemaker.neuralnetwork.function.initialization.RandomInitialization;
 import nl.wouterkistemaker.neuralnetwork.function.initialization.XavierInitialization;
+import nl.wouterkistemaker.neuralnetwork.function.transfer.LeakyReLUTransfer;
+import nl.wouterkistemaker.neuralnetwork.function.transfer.ReLUTransfer;
+import nl.wouterkistemaker.neuralnetwork.function.transfer.SigmoidTransfer;
 import nl.wouterkistemaker.neuralnetwork.layer.InputLayer;
 import nl.wouterkistemaker.neuralnetwork.layer.Layer;
 import nl.wouterkistemaker.neuralnetwork.neuron.BiasNeuron;
@@ -87,5 +90,22 @@ public class ObjectTests {
         System.out.println(Arrays.toString(input.getOutput()));
         System.out.println(Arrays.toString(output.getOutput()));
         System.out.println(Arrays.toString(network.getOutput()));
+    }
+
+    @Test
+    public void testSigmoidFunction() {
+        SigmoidTransfer sigmoid = new SigmoidTransfer();
+        ReLUTransfer relu = new ReLUTransfer();
+        LeakyReLUTransfer leakyRelu = new LeakyReLUTransfer();
+
+        final double weightedSum = 0.562;
+
+        final double sigmoidValue = sigmoid.apply(weightedSum);
+        final double reluValue = relu.apply(weightedSum);
+        final double leakyReluValue = leakyRelu.apply(weightedSum);
+
+        Assertions.assertNotEquals(weightedSum, sigmoid.unapply(sigmoidValue));
+        Assertions.assertEquals(weightedSum, relu.unapply(reluValue));
+        Assertions.assertEquals(weightedSum, leakyRelu.unapply(leakyReluValue));
     }
 }

@@ -60,11 +60,11 @@ public final class NeuralNetwork implements Serializable {
         return (index - 1) < 0 ? current : layers.get(index - 1);
     }
 
-    public final boolean isLastLayer(Layer layer) {
+    public final boolean isOutputLayer(Layer layer) {
         return layers.indexOf(layer) == layers.size() - 1;
     }
 
-    public final boolean isFirstLayer(Layer layer) {
+    public final boolean isInputLayer(Layer layer) {
         return layers.indexOf(layer) == 0;
     }
 

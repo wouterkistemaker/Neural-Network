@@ -20,6 +20,14 @@ public final class ReLUTransfer implements TransferFunction {
     }
 
     @Override
+    public double unapply(double val) {
+        if (val < 0) {
+            throw new IllegalArgumentException("ReLU doesn't return values higher lower than 0");
+        }
+        return apply(val);
+    }
+
+    @Override
     public double applyDerivative(double wSum) {
         if (wSum == 0) {
             throw new ArithmeticException("ReLU has no derivative in x=0");

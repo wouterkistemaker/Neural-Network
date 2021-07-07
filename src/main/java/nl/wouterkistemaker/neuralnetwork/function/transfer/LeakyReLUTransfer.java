@@ -22,6 +22,12 @@ public final class LeakyReLUTransfer implements TransferFunction {
     }
 
     @Override
+    public double unapply(double val) {
+        if (val > 0) return val;
+        return val * 100;
+    }
+
+    @Override
     public double applyDerivative(double wSum) {
         return (wSum > 0) ? 1 : 0.01;
     }

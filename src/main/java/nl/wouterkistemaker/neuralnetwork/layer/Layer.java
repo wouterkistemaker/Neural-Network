@@ -124,32 +124,20 @@ public class Layer implements Serializable {
     }
 
     public void propagateBackwards(double learningRate) {
-        if (network.isFirstLayer(this)) {
+        if (network.isInputLayer(this)) {
             return;
         }
 
         final Layer previousLayer = network.getPreviousLayer(this);
-        // do some stuff
 
-        for (int k = 0; k < neurons.size(); k++) {
-            final Neuron neuron = neurons.get(k);
-            for (int j = 0; j < previousLayer.getNeurons().size(); j++) {
-                final Neuron previousNeuron = previousLayer.getNeurons().get(j);
-
-                // We compare the output of neuron K with target output for neuron K and apply the derivative of the cost function
-                final double costDerivative = costFunction.applyDerivative(neuron.getValue(), network.getTargetOutput()[k]);
-
-                // We apply the derivative of the transfer function to the weighted sum that determines the output of neuron K
-                final double transferDerivative = transferFunction.applyDerivative(neuron.getValue());
-
-                /* This is the adjustment that needs to made (after being multiplied with the learning-rate) to
-                the weight that connects the previous neuron J with the current neuron K
-                */
-                final double deltaWeight = costDerivative * transferDerivative * previousNeuron.getValue();
-
-                previousNeuron.getConnectionWith(neuron).adjustWeight(learningRate * deltaWeight);
-            }
+        if (network.isOutputLayer(this)) {
+            // execute the backwards propagation algorithm for the output-layer
+            this.propagateBackwardsOutputLayer(learningRate, previousLayer);
+        } else {
+            // execute the backwards propagation algorithm for hidden layers
+            this.propagateBackwardsHiddenLayer(learningRate, previousLayer);
         }
+
         previousLayer.propagateBackwards(learningRate);
     }
 
@@ -186,7 +174,6 @@ public class Layer implements Serializable {
     }
 
     public final double getCost() {
-
         return getNeurons().stream().mapToDouble(Neuron::getError).sum();
     }
 
@@ -223,5 +210,32 @@ public class Layer implements Serializable {
         if (network == null) {
             throw new IllegalStateException("NeuralNetwork instance is missing");
         }
+    }
+
+    private void propagateBackwardsOutputLayer(double learningRate, Layer previousLayer) {
+        for (int k = 0; k < neurons.size(); k++) {
+            final Neuron neuron = neurons.get(k);
+
+            for (int j = 0; j < previousLayer.getNeurons().size(); j++) {
+                final Neuron previousNeuron = previousLayer.getNeurons().get(j);
+
+                // We compare the output of neuron K with target output for neuron K and apply the derivative of the cost function
+                final double costDerivative = costFunction.applyDerivative(neuron.getValue(), network.getTargetOutput()[k]);
+
+                // We apply the derivative of the transfer function to the weighted sum that determines the output of neuron K
+                final double weightedSum = transferFunction.unapply(neuron.getValue());
+                final double transferDerivative = transferFunction.applyDerivative(weightedSum);
+
+                /* This is the adjustment that needs to made (after being multiplied with the learning-rate) to
+                the weight that connects the previous neuron J with the current neuron K
+                */
+                final double deltaWeight = costDerivative * transferDerivative * previousNeuron.getValue();
+                previousNeuron.getConnectionWith(neuron).adjustWeight(learningRate * deltaWeight);
+            }
+        }
+    }
+
+    private void propagateBackwardsHiddenLayer(double learningRate, Layer previousLayer) {
+        // TODO implement
     }
 }

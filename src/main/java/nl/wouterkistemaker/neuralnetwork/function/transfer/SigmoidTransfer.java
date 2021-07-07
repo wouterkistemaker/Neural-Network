@@ -21,6 +21,10 @@ public final class SigmoidTransfer implements TransferFunction {
         return ((1 / (1 + Math.exp(-wSum))));
     }
 
+    public double unapply(double val) {
+        return -1 * Math.log((1 / val) - 1);
+    }
+
     @Override
     public double applyDerivative(double wSum) {
         return apply(wSum) * (1 - apply(wSum));

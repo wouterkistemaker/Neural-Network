@@ -21,6 +21,8 @@ public interface TransferFunction extends Serializable {
 
     double apply(double wSum);
 
+    double unapply(double val);
+
     double applyDerivative(double wSum);
 
 

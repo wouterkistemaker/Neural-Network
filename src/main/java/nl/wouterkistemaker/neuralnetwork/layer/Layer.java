@@ -123,7 +123,7 @@ public class Layer implements Serializable {
         }
     }
 
-    public void propagateBackwards(double learningRate) {
+    public void propagateBackwards() {
         if (network.isInputLayer(this)) {
             return;
         }
@@ -132,13 +132,14 @@ public class Layer implements Serializable {
 
         if (network.isOutputLayer(this)) {
             // execute the backwards propagation algorithm for the output-layer
-            this.propagateBackwardsOutputLayer(learningRate, previousLayer);
+            this.propagateBackwardsOutputLayer();
         } else {
             // execute the backwards propagation algorithm for hidden layers
-            this.propagateBackwardsHiddenLayer(learningRate, previousLayer);
+            final Layer nextLayer = network.getNextLayer(this);
+            this.propagateBackwardsHiddenLayer(nextLayer);
         }
 
-        previousLayer.propagateBackwards(learningRate);
+        previousLayer.propagateBackwards();
     }
 
     public final int getSize() {
@@ -212,30 +213,64 @@ public class Layer implements Serializable {
         }
     }
 
-    private void propagateBackwardsOutputLayer(double learningRate, Layer previousLayer) {
+    /*
+    The mathematics used in this code block look rather simple but the derivation of the backpropagation algorithm
+    is actually very hard to do. I might post an explanation of it in this repository in the future.
+     */
+    private void propagateBackwardsOutputLayer() {
         for (int k = 0; k < neurons.size(); k++) {
             final Neuron neuron = neurons.get(k);
 
-            for (int j = 0; j < previousLayer.getNeurons().size(); j++) {
-                final Neuron previousNeuron = previousLayer.getNeurons().get(j);
+            // We compare the output of neuron K with target output for neuron K and apply the derivative of the cost function
+            final double costDerivative = costFunction.applyDerivative(neuron.getValue(), network.getTargetOutput()[k]);
 
-                // We compare the output of neuron K with target output for neuron K and apply the derivative of the cost function
-                final double costDerivative = costFunction.applyDerivative(neuron.getValue(), network.getTargetOutput()[k]);
+            // We apply the derivative of the transfer function to the weighted sum that determines the output of neuron K
+            final double weightedSum = transferFunction.unapply(neuron.getValue());
+            final double transferDerivative = transferFunction.applyDerivative(weightedSum);
 
-                // We apply the derivative of the transfer function to the weighted sum that determines the output of neuron K
-                final double weightedSum = transferFunction.unapply(neuron.getValue());
-                final double transferDerivative = transferFunction.applyDerivative(weightedSum);
+            // In the math, I defined δk to be costDerivative * transferDerivative
+            neuron.setDelta(costDerivative * transferDerivative);
 
                 /* This is the adjustment that needs to made (after being multiplied with the learning-rate) to
                 the weight that connects the previous neuron J with the current neuron K
                 */
-                final double deltaWeight = costDerivative * transferDerivative * previousNeuron.getValue();
-                previousNeuron.getConnectionWith(neuron).adjustWeight(learningRate * deltaWeight);
-            }
+
+//                final double deltaWeight = costDerivative * transferDerivative * previousNeuron.getValue();
+//                previousNeuron.getConnectionWith(neuron).adjustWeight(learningRate * deltaWeight);
         }
     }
 
-    private void propagateBackwardsHiddenLayer(double learningRate, Layer previousLayer) {
-        // TODO implement
+    private void propagateBackwardsHiddenLayer(Layer nextLayer) {
+        /*
+        for each weight that originates from a hidden layer l-1, we need the following stuff to calculate the gradient:
+
+        -   activation value of the neuron i in the previous layer l-2 that we are concerned with
+        -   derivative of transfer-function of this hidden layer, applied to the weighted sum of neuron j in this layer
+
+        -   summation over all neurons in the NEXT layer l (l-1 + 1 = l) multiplying:
+            -   derivative of the cost-function applied to neuron k in layer l
+            -   derivative of the transfer-function of the next layer l, applied to the weighted sum of neuron k in the next layer l
+            -   weight connecting neuron j in layer l-1 with neuron k in the next layer l
+
+            Multiplying the summation with the two terms mentioned above gives us the impact of a hidden weight on the cost.
+         */
+
+        if (this == nextLayer){
+            throw new IllegalArgumentException("Next layer cannot be equal to the current layer");
+        }
+
+        for (final Neuron currentNeuron : this.neurons) {
+            final double weightedSum = transferFunction.unapply(currentNeuron.getValue());
+            final double transferDerivative = transferFunction.applyDerivative(weightedSum);
+
+            double sum = 0;
+            for (int k = 0; k < nextLayer.getNeurons().size(); k++) {
+                final Neuron nextNeuron = nextLayer.getNeurons().get(k);
+
+                sum += (nextNeuron.getDelta() * currentNeuron.getConnectionWith(nextNeuron).getWeight());
+            }
+
+            currentNeuron.setDelta(sum * transferDerivative);
+        }
     }
 }

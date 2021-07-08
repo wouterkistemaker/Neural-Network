@@ -31,6 +31,7 @@ public class Neuron implements Serializable {
     private static final long serialVersionUID = 6952458116227426483L;
     private final UUID id;
     private double value;
+    private double delta;
     private double error;
     private final Set<NeuronConnection> connections;
 
@@ -152,6 +153,14 @@ public class Neuron implements Serializable {
         this.error = error;
     }
 
+    public double getDelta() {
+        return delta;
+    }
+
+    public void setDelta(double delta) {
+        this.delta = delta;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -164,4 +173,6 @@ public class Neuron implements Serializable {
     public int hashCode() {
         return Objects.hash(value, id);
     }
+
+
 }

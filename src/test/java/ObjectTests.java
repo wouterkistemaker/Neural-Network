@@ -108,4 +108,20 @@ public class ObjectTests {
         Assertions.assertEquals(weightedSum, relu.unapply(reluValue));
         Assertions.assertEquals(weightedSum, leakyRelu.unapply(leakyReluValue));
     }
+
+    @Test
+    public void testBackPropagate() {
+
+        final InputLayer input = new InputLayer(2, false, new XavierInitialization());
+        final Layer hiddenLayer = new Layer(5, false, new XavierInitialization());
+        final Layer output = new Layer(1, false, new XavierInitialization());
+
+        final NeuralNetwork network = new NeuralNetwork(input, hiddenLayer, output);
+
+        network.feedforward();
+        network.propagateBackwards();
+
+        Assertions.assertTrue(output.getNeurons().stream().allMatch(n -> n.getDelta() != 0));
+
+    }
 }

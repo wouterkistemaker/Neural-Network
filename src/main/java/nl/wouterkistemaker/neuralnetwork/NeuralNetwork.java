@@ -60,6 +60,11 @@ public final class NeuralNetwork implements Serializable {
         return (index - 1) < 0 ? current : layers.get(index - 1);
     }
 
+    public Layer getNextLayer(Layer layer) {
+        final int index = layers.indexOf(layer);
+        return (index +1 >= layers.size()) ? layer : layers.get(index+1);
+    }
+
     public final boolean isOutputLayer(Layer layer) {
         return layers.indexOf(layer) == layers.size() - 1;
     }
@@ -82,8 +87,8 @@ public final class NeuralNetwork implements Serializable {
         if (this.frame != null) this.frame.update();
     }
 
-    public final void propagateBackwards(double learningRate){
-        layers.get(layers.size()-1).propagateBackwards(learningRate);
+    public final void propagateBackwards() {
+        layers.get(layers.size() - 1).propagateBackwards();
         if (this.frame != null) this.frame.update();
     }
 
@@ -176,13 +181,17 @@ public final class NeuralNetwork implements Serializable {
     }
 
     public final double[] getTargetOutput() {
-        return new double[0];
+        double[] target = new double[this.layers.get(layers.size() - 1).getNeurons().size()];
+        for (int i = 0; i < target.length; i++) {
+            target[i] = NetworkUtility.nextDouble();
+        }
+
+        return target;
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id);
     }
-
 
 }

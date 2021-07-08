@@ -20,7 +20,8 @@ public final class ObservableList<T> extends ArrayList<T> implements Observable<
     public void setValue(Collection<? extends T> value) {
         Collection<? extends T> oldValue = this.value;
         this.value = value;
-        this.emit(oldValue, value);
+
+        listeners.forEach(l -> l.handle(oldValue, value));
     }
 
     @Deprecated
@@ -32,9 +33,5 @@ public final class ObservableList<T> extends ArrayList<T> implements Observable<
     @Override
     public Collection<ChangeListener<Collection<? extends T>>> getListeners() {
         return listeners;
-    }
-
-    private void emit(Collection<? extends T> oldValue, Collection<? extends T> value) {
-        this.listeners.forEach(l -> l.handle(oldValue, value));
     }
 }

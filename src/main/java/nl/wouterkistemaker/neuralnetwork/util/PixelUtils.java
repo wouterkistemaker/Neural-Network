@@ -17,6 +17,7 @@ public final class PixelUtils {
      * Retrieves pixels from the given image.
      *
      * @param filePath The path to the image.
+     * @throws IllegalStateException When the image cannot be read.
      * @return The RGB values in a two-dimensional array (X, Y).
      */
     public static int[][] getPixels(String filePath) {
@@ -46,8 +47,8 @@ public final class PixelUtils {
             }
 
             return data;
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
+        } catch (Exception e) {
+            throw new IllegalStateException(e.getMessage());
         }
     }
 

@@ -13,6 +13,12 @@ public final class PixelUtils {
         throw new AssertionError("Instantiating Utils class is forbidden.");
     }
 
+    /**
+     * Retrieves pixels from the given image.
+     *
+     * @param filePath The path to the image.
+     * @return The RGB values in a two-dimensional array (X, Y).
+     */
     public static int[][] getPixels(String filePath) {
         BufferedImage image;
         int width;
@@ -45,6 +51,12 @@ public final class PixelUtils {
         }
     }
 
+    /**
+     * Parses the given RGBA value and wraps it into a Pixel object.
+     *
+     * @param rgba The given RGBA value.
+     * @return The wrapped pixel.
+     */
     public static Pixel parse(int rgba) {
         final int red = (rgba >> 16) & 0xFF;
         final int green = (rgba >> 8) & 0xFF;

@@ -55,6 +55,8 @@ public final class PixelUtils {
      * Parses the given RGBA value and wraps it into a Pixel object.
      *
      * @param rgba The given RGBA value.
+     * @throws IllegalArgumentException When the RGB value is less than {@link Pixel#RGB_MIN } or bigger than {@link Pixel#RGB_MAX}.
+     * @throws IllegalArgumentException When the Alpha value is less than {@link Pixel#ALPHA_MIN} or bigger than {@link Pixel#ALPHA_MAX}.
      * @return The wrapped pixel.
      */
     public static Pixel parse(int rgba) {

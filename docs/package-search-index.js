@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"nl.woetroe.nn"},{"l":"nl.woetroe.nn.data"},{"l":"nl.woetroe.nn.data.type"},{"l":"nl.woetroe.nn.function.activation"},{"l":"nl.woetroe.nn.function.error"},{"l":"nl.woetroe.nn.function.initialization"},{"l":"nl.woetroe.nn.layer"},{"l":"nl.woetroe.nn.neuron"},{"l":"nl.woetroe.nn.util"}]

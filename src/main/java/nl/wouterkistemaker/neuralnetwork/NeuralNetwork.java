@@ -4,6 +4,7 @@ import nl.wouterkistemaker.neuralnetwork.layer.InputLayer;
 import nl.wouterkistemaker.neuralnetwork.layer.Layer;
 import nl.wouterkistemaker.neuralnetwork.neuron.Neuron;
 import nl.wouterkistemaker.neuralnetwork.neuron.NeuronConnection;
+import nl.wouterkistemaker.neuralnetwork.util.MetricsUtils;
 import nl.wouterkistemaker.neuralnetwork.visualisation.NeuralNetworkFrame;
 import nl.wouterkistemaker.neuralnetwork.visualisation.NeuralNetworkPanel;
 
@@ -35,6 +36,9 @@ public final class NeuralNetwork implements Serializable {
     private final Layer outputLayer;
 
     private double[] targetOutput;
+    private List<Double> cost;
+    private int epochCounter;
+
     private boolean connected; // boolean signalling whether or not the layers are yet interconnected
 
     private NeuralNetworkFrame frame;
@@ -66,6 +70,8 @@ public final class NeuralNetwork implements Serializable {
             this.inputLayer = (InputLayer) this.layers.get(0);
             this.outputLayer = this.layers.get(layers.length - 1);
             this.layers.forEach(l -> l.setNetworkInstance(this));
+
+            this.cost = new LinkedList<>();
 
             this.connect();
 
@@ -135,13 +141,16 @@ public final class NeuralNetwork implements Serializable {
 
     public final void train(double[] input, double[] target, double learningRate) {
         if (input.length != inputLayer.getSize() || target.length != outputLayer.getSize()) {
-            throw new IllegalArgumentException("Invalid dimensions");
+            throw new IllegalArgumentException("Invalid dimensions for " + (input.length == inputLayer.getSize() ? "target" : "input") + ", " + target.length + " does not match " + outputLayer.getSize());
         }
 
         this.inputLayer.setInput(input);
         this.targetOutput = target;
 
         this.feedforward();
+
+        cost.add(epochCounter++, outputLayer.getCost());
+
         this.propagateBackwards();
         this.updateWeights(learningRate);
     }
@@ -225,6 +234,10 @@ public final class NeuralNetwork implements Serializable {
 
     public final double[] getTargetOutput() {
         return this.targetOutput;
+    }
+
+    public final void drawErrorCurve() {
+        MetricsUtils.drawErrorCurve(cost);
     }
 
     @Override

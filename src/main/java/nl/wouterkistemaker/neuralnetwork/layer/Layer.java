@@ -175,7 +175,7 @@ public class Layer implements Serializable {
     }
 
     public final double getCost() {
-        return getNeurons().stream().mapToDouble(Neuron::getError).sum();
+        return getNeurons().stream().mapToDouble(Neuron::getError).average().orElse(0);
     }
 
     public final double[] getOutput() {
@@ -220,6 +220,11 @@ public class Layer implements Serializable {
     private void propagateBackwardsOutputLayer() {
         for (int k = 0; k < neurons.size(); k++) {
             final Neuron neuron = neurons.get(k);
+
+            final double cost = costFunction.apply(neuron.getValue(), network.getTargetOutput()[k]);
+            neuron.setError(cost);
+
+            System.out.printf("Error between %s and %s is %s\n ", neuron.getValue(), network.getTargetOutput()[k], cost);
 
             // We compare the output of neuron K with target output for neuron K and apply the derivative of the cost function
             final double costDerivative = costFunction.applyDerivative(neuron.getValue(), network.getTargetOutput()[k]);

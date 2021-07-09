@@ -36,16 +36,18 @@ public class BackpropagationTests {
         network.visualize();
 
         final double[] input = new double[]{0.4, 0.3};
-        final double[] targetOutput = new double[]{0.1};
+        final double[] targetOutput = new double[]{0.18};
 
         System.out.printf("Desired prediction for %s is: %s\n", Arrays.toString(input), Arrays.toString(targetOutput));
         System.out.printf("Actual prediction is: %s\n", Arrays.toString(network.predict(input)));
 
-        for (int i = 0; i < 500000; i++) {
+        for (int i = 0; i < 10000; i++) {
             network.train(input, targetOutput, 0.01);
         }
 
         System.out.printf("Actual prediction after backpropagation is: %s\n", Arrays.toString(network.predict(input)));
+
+        network.drawErrorCurve();
     }
 
 }

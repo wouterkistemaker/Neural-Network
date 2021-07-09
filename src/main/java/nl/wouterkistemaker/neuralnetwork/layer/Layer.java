@@ -118,16 +118,12 @@ public class Layer implements Serializable {
                 final NeuronConnection connection = current.getConnectionWith(nextNeuron); // Connection of current neuron with next neuron
                 sum += (current.getValue() * connection.getWeight());
             }
-
-            nextNeuron.setValue(transferFunction.apply(sum));
+            final double newValue = next.getTransferFunction().apply(sum);
+            nextNeuron.setValue(newValue);
         }
     }
 
     public void propagateBackwards() {
-        if (network.isInputLayer(this)) {
-            return;
-        }
-
         final Layer previousLayer = network.getPreviousLayer(this);
 
         if (network.isOutputLayer(this)) {
@@ -137,6 +133,10 @@ public class Layer implements Serializable {
             // execute the backwards propagation algorithm for hidden layers
             final Layer nextLayer = network.getNextLayer(this);
             this.propagateBackwardsHiddenLayer(nextLayer);
+        }
+
+        if (network.isInputLayer(this)) {
+            return;
         }
 
         previousLayer.propagateBackwards();
@@ -230,13 +230,6 @@ public class Layer implements Serializable {
 
             // In the math, I defined δk to be costDerivative * transferDerivative
             neuron.setDelta(costDerivative * transferDerivative);
-
-                /* This is the adjustment that needs to made (after being multiplied with the learning-rate) to
-                the weight that connects the previous neuron J with the current neuron K
-                */
-
-//                final double deltaWeight = costDerivative * transferDerivative * previousNeuron.getValue();
-//                previousNeuron.getConnectionWith(neuron).adjustWeight(learningRate * deltaWeight);
         }
     }
 
@@ -255,7 +248,7 @@ public class Layer implements Serializable {
             Multiplying the summation with the two terms mentioned above gives us the impact of a hidden weight on the cost.
          */
 
-        if (this == nextLayer){
+        if (this == nextLayer) {
             throw new IllegalArgumentException("Next layer cannot be equal to the current layer");
         }
 

@@ -118,10 +118,16 @@ public class ObjectTests {
 
         final NeuralNetwork network = new NeuralNetwork(input, hiddenLayer, output);
 
+        final Neuron inputNeuron = input.getNeurons().get(0);
+        final Neuron hiddenNeuron = hiddenLayer.getNeurons().get(3);
+
+        final double weight = inputNeuron.getConnectionWith(hiddenNeuron).getWeight();
+
         network.feedforward();
         network.propagateBackwards();
+        network.updateWeights(0.01);
 
         Assertions.assertTrue(output.getNeurons().stream().allMatch(n -> n.getDelta() != 0));
-
+        Assertions.assertTrue(weight != inputNeuron.getConnectionWith(hiddenNeuron).getWeight());
     }
 }

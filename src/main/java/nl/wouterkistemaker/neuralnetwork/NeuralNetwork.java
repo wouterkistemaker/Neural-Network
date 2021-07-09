@@ -1,6 +1,9 @@
 package nl.wouterkistemaker.neuralnetwork;
 
+import nl.wouterkistemaker.neuralnetwork.layer.InputLayer;
 import nl.wouterkistemaker.neuralnetwork.layer.Layer;
+import nl.wouterkistemaker.neuralnetwork.neuron.Neuron;
+import nl.wouterkistemaker.neuralnetwork.neuron.NeuronConnection;
 import nl.wouterkistemaker.neuralnetwork.visualisation.NeuralNetworkFrame;
 import nl.wouterkistemaker.neuralnetwork.visualisation.NeuralNetworkPanel;
 
@@ -26,8 +29,12 @@ public final class NeuralNetwork implements Serializable {
     private static final String DEFAULT_FILE_NAME = "neuralnetwork.dat";
 
     private final UUID id;
-    private final List<Layer> layers;
 
+    private final List<Layer> layers;
+    private final InputLayer inputLayer;
+    private final Layer outputLayer;
+
+    private double[] targetOutput;
     private boolean connected; // boolean signalling whether or not the layers are yet interconnected
 
     private NeuralNetworkFrame frame;
@@ -38,6 +45,7 @@ public final class NeuralNetwork implements Serializable {
      * @param layers array of {@link Layer layers} of this NeuralNetwork
      */
     public NeuralNetwork(Layer... layers) {
+
         this.id = UUID.randomUUID();
         this.connected = false;
 
@@ -47,12 +55,23 @@ public final class NeuralNetwork implements Serializable {
                 layers[layers.length - 1] = new Layer(outputLayer.getSize(), false, outputLayer.getInitializationFunction(), outputLayer.getTransferFunction(), outputLayer.getCostFunction());
                 System.out.println("The output-layer cannot have a bias-neuron, therefore it has been removed!");
             }
+
+            final Layer inputLayer = layers[0];
+            if (!(inputLayer instanceof InputLayer)) {
+                layers[0] = new InputLayer(inputLayer.getSize(), inputLayer.hasBias(), inputLayer.getInitializationFunction(), inputLayer.getTransferFunction(), inputLayer.getCostFunction());
+                System.out.println("The network must have an input-layer, therefore the first layer was transformed into an InputLayer");
+            }
+
+            this.layers = new LinkedList<>(Arrays.asList(layers));
+            this.inputLayer = (InputLayer) this.layers.get(0);
+            this.outputLayer = this.layers.get(layers.length - 1);
+            this.layers.forEach(l -> l.setNetworkInstance(this));
+
+            this.connect();
+
+        } else {
+            throw new IllegalStateException("Cannot create empty Neural Network");
         }
-
-        this.layers = new LinkedList<>(Arrays.asList(layers));
-        this.layers.forEach(l -> l.setNetworkInstance(this));
-
-        this.connect();
     }
 
     public final Layer getPreviousLayer(Layer current) {
@@ -60,9 +79,9 @@ public final class NeuralNetwork implements Serializable {
         return (index - 1) < 0 ? current : layers.get(index - 1);
     }
 
-    public Layer getNextLayer(Layer layer) {
+    public final Layer getNextLayer(Layer layer) {
         final int index = layers.indexOf(layer);
-        return (index +1 >= layers.size()) ? layer : layers.get(index+1);
+        return (index + 1 >= layers.size()) ? layer : layers.get(index + 1);
     }
 
     public final boolean isOutputLayer(Layer layer) {
@@ -74,7 +93,6 @@ public final class NeuralNetwork implements Serializable {
     }
 
     public final void feedforward() {
-        System.out.println("Starting the forward propagation of the input");
         for (int i = 0; i < layers.size(); i++) {
             if (i + 1 >= layers.size()) break;
 
@@ -92,21 +110,42 @@ public final class NeuralNetwork implements Serializable {
         if (this.frame != null) this.frame.update();
     }
 
-    /**
-     * Function that initiates the process of connecting each individual
-     * {@link Layer} to the next {@link Layer} in the network
-     */
-    private void connect() {
-        if (connected) return;
-        for (int i = 0; i < layers.size(); i++) {
-            if (i + 1 >= layers.size()) break; // last layer
+    public final void updateWeights(double learningRate) {
+        for (int l = 0; l < layers.size(); l++) {
+            if (l + 1 >= layers.size()) break;
 
-            final Layer layer = layers.get(i);
-            final Layer next = layers.get(i + 1);
+            final Layer layer = layers.get(l);
+            final Layer next = layers.get(l + 1);
 
-            layer.connect(next);
+            for (Neuron previousNeuron : layer.getNeurons()) {
+                for (Neuron nextNeuron : next.getNeurons()) {
+
+                    final NeuronConnection connection = previousNeuron.getConnectionWith(nextNeuron);
+                    final double adjustment = -learningRate * nextNeuron.getDelta() * previousNeuron.getValue();
+
+                    connection.adjustWeight(adjustment);
+                }
+            }
         }
-        connected = true;
+    }
+
+    public final void train(double[] input, double[] target, double learningRate) {
+        if (input.length != inputLayer.getSize() || target.length != outputLayer.getSize()) {
+            throw new IllegalArgumentException("Invalid dimensions");
+        }
+
+        this.inputLayer.setInput(input);
+        this.targetOutput = target;
+
+        this.feedforward();
+        this.propagateBackwards();
+        this.updateWeights(learningRate);
+    }
+
+    public final double[] predict(double[] input) {
+        this.inputLayer.setInput(input);
+        this.feedforward();
+        return getOutput();
     }
 
     /**
@@ -181,17 +220,29 @@ public final class NeuralNetwork implements Serializable {
     }
 
     public final double[] getTargetOutput() {
-        double[] target = new double[this.layers.get(layers.size() - 1).getNeurons().size()];
-        for (int i = 0; i < target.length; i++) {
-            target[i] = NetworkUtility.nextDouble();
-        }
-
-        return target;
+        return this.targetOutput;
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return Objects.hash(id);
+    }
+
+    /**
+     * Function that initiates the process of connecting each individual
+     * {@link Layer} to the next {@link Layer} in the network
+     */
+    private void connect() {
+        if (connected) return;
+        for (int i = 0; i < layers.size(); i++) {
+            if (i + 1 >= layers.size()) break; // last layer
+
+            final Layer layer = layers.get(i);
+            final Layer next = layers.get(i + 1);
+
+            layer.connect(next);
+        }
+        connected = true;
     }
 
 }

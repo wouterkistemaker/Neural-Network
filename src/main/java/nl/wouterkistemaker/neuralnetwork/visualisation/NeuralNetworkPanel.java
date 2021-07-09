@@ -30,7 +30,6 @@ public final class NeuralNetworkPanel extends JPanel {
 
     private static final long serialVersionUID = -5206286198194216255L;
     private final List<Layer> layers;
-    private final NeuralNetwork network;
     private final Set<GraphicNeuron> graphicNeurons;
     private final Set<GraphicNeuronConnection> graphicNeuronConnections;
 
@@ -45,7 +44,6 @@ public final class NeuralNetworkPanel extends JPanel {
     }
 
     public NeuralNetworkPanel(NeuralNetwork network) {
-        this.network = network;
         this.layers = network.getLayers();
         this.graphicNeurons = new HashSet<>();
         this.graphicNeuronConnections = new HashSet<>();

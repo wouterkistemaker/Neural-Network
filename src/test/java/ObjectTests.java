@@ -43,21 +43,6 @@ public class ObjectTests {
     }
 
     @Test
-    public void testLayers() {
-        final Layer first = new Layer(2);
-        final Layer last = new Layer(1);
-
-        final Neuron lastNeuron = (Neuron) last.getNeurons().toArray()[0];
-
-        Assertions.assertTrue(first.getNeurons().stream().noneMatch(n -> n.isConnectedTo(lastNeuron)));
-
-        new NeuralNetwork(first, last);
-
-        Assertions.assertFalse(first.getNeurons().stream().noneMatch(n -> n.isConnectedTo(lastNeuron)));
-        Assertions.assertTrue(first.getNeurons().stream().noneMatch(lastNeuron::isConnectedTo));
-    }
-
-    @Test
     public void testSaveAndLoad() {
         final Layer input = new Layer(2, false, new XavierInitialization());
         final Layer output = new Layer(1, false, new XavierInitialization());
@@ -123,9 +108,7 @@ public class ObjectTests {
 
         final double weight = inputNeuron.getConnectionWith(hiddenNeuron).getWeight();
 
-        network.feedforward();
-        network.propagateBackwards();
-        network.updateWeights(0.01);
+        network.train(new double[]{0.2, 0.1}, new double[]{0.7}, 0.01);
 
         Assertions.assertTrue(output.getNeurons().stream().allMatch(n -> n.getDelta() != 0));
         Assertions.assertTrue(weight != inputNeuron.getConnectionWith(hiddenNeuron).getWeight());

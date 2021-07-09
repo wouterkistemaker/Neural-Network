@@ -188,11 +188,11 @@ public class Layer implements Serializable {
         return output;
     }
 
-    private boolean hasBias(Neuron n) {
+    public boolean hasBias(Neuron n) {
         return this.biasNeurons.containsKey(n);
     }
 
-    private BiasNeuron getBias(Neuron n) {
+    public BiasNeuron getBias(Neuron n) {
         if (!hasBias(n)) {
             throw new IllegalStateException("This neuron does not have a bias");
         }

@@ -15,7 +15,7 @@ public class PixelTests {
 
             for (int x = 0; x < pixels[0].length; x++) {
                 for (int y = 0; y < pixels[x].length; y++) {
-                    writer.append(String.valueOf(x)).append(", ").append(String.valueOf(y)).append(": ").append(String.valueOf(PixelUtils.parse(pixels[x][y]))).append('\n');
+                    writer.append(String.valueOf(x+1)).append(", ").append(String.valueOf(y+1)).append(": ").append(String.valueOf(PixelUtils.parse(pixels[x][y]))).append('\n');
                 }
             }
         } catch (IOException e) {

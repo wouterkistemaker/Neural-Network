@@ -28,7 +28,7 @@ public class BackpropagationTests {
 
     private static void execute1() {
         final InputLayer inputLayer = new InputLayer(2, false, new XavierInitialization(), new SigmoidTransfer(), new MeanSquaredCost());
-        final Layer hiddenLayer = new Layer(15, false, new XavierInitialization(), new SigmoidTransfer(), new MeanSquaredCost());
+        final Layer hiddenLayer = new Layer(15, true, new XavierInitialization(), new SigmoidTransfer(), new MeanSquaredCost());
         final Layer outputLayer = new Layer(1, false, new XavierInitialization(), new SigmoidTransfer(), new MeanSquaredCost());
 
         final NeuralNetwork network = new NeuralNetwork(inputLayer, hiddenLayer, outputLayer);

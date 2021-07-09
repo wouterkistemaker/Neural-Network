@@ -1,6 +1,6 @@
 package nl.wouterkistemaker.neuralnetwork.function.initialization;
 
-import nl.wouterkistemaker.neuralnetwork.NetworkUtility;
+import nl.wouterkistemaker.neuralnetwork.util.NetworkUtility;
 import nl.wouterkistemaker.neuralnetwork.layer.Layer;
 import nl.wouterkistemaker.neuralnetwork.neuron.NeuronConnection;
 

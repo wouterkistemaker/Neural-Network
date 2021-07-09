@@ -1,6 +1,6 @@
 package nl.wouterkistemaker.neuralnetwork.function.initialization;
 
-import nl.wouterkistemaker.neuralnetwork.NetworkUtility;
+import nl.wouterkistemaker.neuralnetwork.util.NetworkUtils;
 import nl.wouterkistemaker.neuralnetwork.layer.Layer;
 import nl.wouterkistemaker.neuralnetwork.neuron.NeuronConnection;
 
@@ -27,6 +27,6 @@ public final class XavierInitialization implements InitializationFunction {
 
         // weight = U [-(1/sqrt(n)), 1/sqrt(n)]
         final double bound = 1 / Math.sqrt(nInputNodes);
-        connection.setWeight(NetworkUtility.nextDouble(-bound, bound));
+        connection.setWeight(NetworkUtils.nextDouble(-bound, bound));
     }
 }

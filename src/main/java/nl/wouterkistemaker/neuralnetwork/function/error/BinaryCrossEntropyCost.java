@@ -20,7 +20,7 @@ public final class BinaryCrossEntropyCost implements CostFunction {
         // https://youtu.be/gIx974WtVb4?t=173
         // L = t(lnO) + (1-t)ln(1-O)
 
-        if (output == 1 || output == 0){
+        if (output == 1 || output == 0) {
             throw new IllegalStateException("Error cannot be computed for this output");
         }
 
@@ -30,6 +30,11 @@ public final class BinaryCrossEntropyCost implements CostFunction {
 
     @Override
     public double applyDerivative(double output, double target) {
-        return 0;
+        if (output == 0 || output == 1){
+            ArithmeticException exception = new ArithmeticException();
+            System.out.println(exception.getStackTrace()[1]);
+        }
+
+        return (target / output) - ((1 - target) / (1 - output));
     }
 }

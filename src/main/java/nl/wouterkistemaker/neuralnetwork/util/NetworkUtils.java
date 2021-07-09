@@ -1,6 +1,7 @@
-package nl.wouterkistemaker.neuralnetwork;
+package nl.wouterkistemaker.neuralnetwork.util;
 
 import java.security.SecureRandom;
+import java.util.Arrays;
 
 /*
   Copyright (C) 2020-2021, Wouter Kistemaker.
@@ -15,9 +16,9 @@ import java.security.SecureRandom;
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-public class NetworkUtility {
+public class NetworkUtils {
 
-    private NetworkUtility() {
+    private NetworkUtils() {
     }
 
     private static final SecureRandom secureRandom = new SecureRandom();
@@ -32,5 +33,9 @@ public class NetworkUtility {
             value = secureRandom.nextDouble() * (upperBound - lowerBound) + lowerBound;
         } while (value <= lowerBound);
         return value;
+    }
+
+    public static double[] flatten(double[][] array) {
+        return Arrays.stream(array).flatMapToDouble(Arrays::stream).toArray();
     }
 }

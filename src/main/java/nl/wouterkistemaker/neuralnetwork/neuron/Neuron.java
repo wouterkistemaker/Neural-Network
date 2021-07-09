@@ -14,7 +14,7 @@ package nl.wouterkistemaker.neuralnetwork.neuron;
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import nl.wouterkistemaker.neuralnetwork.NetworkUtility;
+import nl.wouterkistemaker.neuralnetwork.util.NetworkUtils;
 import nl.wouterkistemaker.neuralnetwork.NeuralNetwork;
 import nl.wouterkistemaker.neuralnetwork.exception.NoSuchConnectionException;
 import nl.wouterkistemaker.neuralnetwork.function.error.CostFunction;
@@ -31,6 +31,7 @@ public class Neuron implements Serializable {
     private static final long serialVersionUID = 6952458116227426483L;
     private final UUID id;
     private double value;
+    private double delta;
     private double error;
     private final Set<NeuronConnection> connections;
 
@@ -53,7 +54,7 @@ public class Neuron implements Serializable {
      *               {@code false}neuron value is 0.5
      */
     public Neuron(boolean random) {
-        this(!random ? 0.5 : NetworkUtility.nextDouble());
+        this(!random ? 0.5 : NetworkUtils.nextDouble());
     }
 
     /**
@@ -152,6 +153,14 @@ public class Neuron implements Serializable {
         this.error = error;
     }
 
+    public double getDelta() {
+        return delta;
+    }
+
+    public void setDelta(double delta) {
+        this.delta = delta;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -164,4 +173,6 @@ public class Neuron implements Serializable {
     public int hashCode() {
         return Objects.hash(value, id);
     }
+
+
 }

@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-public class VisualisationTest {
+public class VisualisationTests {
 
     public static void main(String[] args) {
 //        execute0();
@@ -66,8 +66,8 @@ public class VisualisationTest {
     private static void execute2() {
 
         final Layer input = new Layer(2, false, new XavierInitialization());
-        final Layer hidden = new Layer(2, true, new XavierInitialization());
-        final Layer output = new Layer(3, false, new XavierInitialization());
+        final Layer hidden = new Layer(3, true, new XavierInitialization());
+        final Layer output = new Layer(1, false, new XavierInitialization());
         final NeuralNetwork network = new NeuralNetwork(input, hidden, output);
 
         network.visualize();

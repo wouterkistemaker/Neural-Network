@@ -15,6 +15,10 @@ public final class ObservableSet<T> extends HashSet<T> implements Observable<Col
         this.listeners = new LinkedHashSet<>(Arrays.asList(listeners));
     }
 
+    public ObservableSet() {
+        this(new HashSet<>());
+    }
+
     @Deprecated
     @Override
     public void setValue(Collection<? extends T> value) {

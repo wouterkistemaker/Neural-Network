@@ -16,9 +16,9 @@ import java.util.Arrays;
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-public class NetworkUtility {
+public class NetworkUtils {
 
-    private NetworkUtility() {
+    private NetworkUtils() {
     }
 
     private static final SecureRandom secureRandom = new SecureRandom();

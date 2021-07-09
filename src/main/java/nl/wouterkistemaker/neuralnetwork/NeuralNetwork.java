@@ -125,6 +125,10 @@ public final class NeuralNetwork implements Serializable {
 
                     connection.adjustWeight(adjustment);
                 }
+
+                if (layer.hasBias(previousNeuron)) {
+                    layer.getBias(previousNeuron).getConnectionWith(previousNeuron).adjustWeight(-learningRate * previousNeuron.getDelta());
+                }
             }
         }
     }

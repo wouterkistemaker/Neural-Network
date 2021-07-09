@@ -120,12 +120,12 @@ public final class PixelUtils {
 
         @Override
         public String toString() {
-            return "Pixel{" +
+            return "Pixel (" +
                     "red=" + red +
                     ", green=" + green +
                     ", blue=" + blue +
-                    ", alpha=" + alpha +
-                    '}';
+                    ", alpha=" + (alpha / 255.0) +
+                    ")";
         }
     }
 }

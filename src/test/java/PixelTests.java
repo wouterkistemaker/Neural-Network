@@ -4,7 +4,10 @@ import nl.wouterkistemaker.neuralnetwork.util.PixelUtils.Pixel;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class PixelTests {
@@ -16,15 +19,8 @@ public class PixelTests {
         try (FileWriter writer = new FileWriter(out)) {
             int[][] pixels = PixelUtils.getPixels(in);
 
-<<<<<<< HEAD
             for (Map.Entry<String, Integer> entry : compress(pixels).entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).collect(Collectors.toCollection(LinkedHashSet::new))) {
                 writer.append(entry.getKey()).append(" x ").append(String.valueOf(entry.getValue())).append('\n');
-=======
-            for (int x = 0; x < pixels[0].length; x++) {
-                for (int y = 0; y < pixels[x].length; y++) {
-                    writer.append(String.valueOf(x+1)).append(", ").append(String.valueOf(y+1)).append(": ").append(String.valueOf(PixelUtils.parse(pixels[x][y]))).append('\n');
-                }
->>>>>>> 21c68496c983cd04eb8609ac027b369fd799e271
             }
         } catch (IOException e) {
             e.printStackTrace();

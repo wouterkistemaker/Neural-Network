@@ -34,11 +34,7 @@ public class PixelTests {
             for (int y = 0; y < data[x].length; y++) {
                 final Pixel pixel = PixelUtils.parse(data[x][y]);
 
-                if (map.containsKey(pixel.toString())) {
-                    map.replace(pixel.toString(), map.get(pixel.toString()) + 1);
-                } else {
-                    map.put(pixel.toString(), 1);
-                }
+                map.put(pixel.toString(), map.getOrDefault(pixel.toString(), 0) + 1);
             }
         }
 

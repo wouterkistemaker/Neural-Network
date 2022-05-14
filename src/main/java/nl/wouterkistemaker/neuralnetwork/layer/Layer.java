@@ -177,7 +177,8 @@ public class Layer implements Serializable {
     }
 
     public final double getCost() {
-        return getNeurons().stream().mapToDouble(Neuron::getError).average().orElse(0);
+//        return getNeurons().stream().mapToDouble(Neuron::getError).average().orElse(0);
+        return getNeurons().stream().mapToDouble(Neuron::getError).sum();
     }
 
     public final double[] getOutput() {

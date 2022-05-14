@@ -68,8 +68,8 @@ public class VisualisationTests {
     private static void execute2() {
 
         final Layer input = new InputLayer(2, false, new XavierInitialization());
-        final Layer hidden = new Layer(3, true, new XavierInitialization());
-        final Layer output = new OutputLayer(1, false, new XavierInitialization());
+        final Layer hidden = new Layer(30, true, new XavierInitialization());
+        final Layer output = new OutputLayer(1, new XavierInitialization());
         final NeuralNetwork network = new NeuralNetwork(input, hidden, output);
 
         network.visualize();

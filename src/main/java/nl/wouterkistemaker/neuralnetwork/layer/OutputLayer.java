@@ -24,31 +24,27 @@ public final class OutputLayer extends Layer {
 
     private final CostFunction costFunction;
 
-    public OutputLayer(int size, boolean bias, InitializationFunction initializationFunction, TransferFunction transferFunction, CostFunction costFunction) {
-        super(size, bias, initializationFunction, transferFunction, costFunction);
+    public OutputLayer(int size, InitializationFunction initializationFunction, TransferFunction transferFunction, CostFunction costFunction) {
+        super(size, false, initializationFunction, transferFunction, costFunction);
         this.costFunction = costFunction == null ? DEFAULT_COST_FUNCTION : costFunction;
     }
 
-    public OutputLayer(int size, boolean bias, InitializationFunction initializationFunction, TransferFunction transferFunction) {
-        this(size, bias, initializationFunction, transferFunction, null);
+    public OutputLayer(int size, InitializationFunction initializationFunction, TransferFunction transferFunction) {
+        this(size, initializationFunction, transferFunction, null);
     }
 
-    public OutputLayer(int size, boolean bias, InitializationFunction initializationFunction) {
-        this(size, bias, initializationFunction, null);
-    }
-
-    public OutputLayer(int size, boolean bias) {
-        this(size, bias, null);
+    public OutputLayer(int size, InitializationFunction initializationFunction) {
+        this(size, initializationFunction, null);
     }
 
     public OutputLayer(int size) {
-        this(size, false);
+        this(size, null);
     }
-
-    @Override
-    public void propagateBackwards() {
-        
-    }
+//
+//    @Override
+//    public void propagateBackwards() {
+//        super.propagateBackwards();
+//    }
 
 
 }

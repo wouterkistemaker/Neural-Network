@@ -14,10 +14,10 @@ package nl.wouterkistemaker.neuralnetwork.neuron;
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import nl.wouterkistemaker.neuralnetwork.util.NetworkUtils;
 import nl.wouterkistemaker.neuralnetwork.NeuralNetwork;
 import nl.wouterkistemaker.neuralnetwork.exception.NoSuchConnectionException;
 import nl.wouterkistemaker.neuralnetwork.function.error.CostFunction;
+import nl.wouterkistemaker.neuralnetwork.util.NetworkUtils;
 
 import java.io.Serializable;
 import java.util.*;

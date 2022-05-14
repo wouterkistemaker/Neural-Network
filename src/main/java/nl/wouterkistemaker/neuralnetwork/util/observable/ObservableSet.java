@@ -1,18 +1,22 @@
-package nl.wouterkistemaker.neuralnetwork.util;
+package nl.wouterkistemaker.neuralnetwork.util.observable;
 
 import java.util.*;
 
-public final class ObservableList<T> extends ArrayList<T> implements Observable<Collection<? extends T>> {
+public final class ObservableSet<T> extends HashSet<T> implements Observable<Collection<? extends T>> {
 
     private Collection<? extends T> value;
     private final Set<ChangeListener<Collection<? extends T>>> listeners;
 
     @SafeVarargs
-    public ObservableList(Collection<? extends T> value, ChangeListener<Collection<? extends T>>... listeners) {
+    public ObservableSet(Collection<? extends T> value, ChangeListener<Collection<? extends T>>... listeners) {
         super(value);
 
         this.value = value;
         this.listeners = new LinkedHashSet<>(Arrays.asList(listeners));
+    }
+
+    public ObservableSet() {
+        this(new HashSet<>());
     }
 
     @Deprecated

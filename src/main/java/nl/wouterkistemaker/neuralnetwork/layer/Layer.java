@@ -104,7 +104,8 @@ public class Layer implements Serializable {
 
     public void feedforward(Layer next) {
         this.checkNetworkInstance();
-        for (Neuron nextNeuron : next.getNeurons()) {
+        for (int i = 0; i < next.getSize(); i++) {
+            Neuron nextNeuron = next.getNeurons().get(i);
 
             double sum = next.hasBias(nextNeuron) ? next.getBias(nextNeuron).getConnectionWith(nextNeuron).getWeight() : 0;
 
@@ -118,6 +119,7 @@ public class Layer implements Serializable {
                 final NeuronConnection connection = current.getConnectionWith(nextNeuron); // Connection of current neuron with next neuron
                 sum += (current.getValue() * connection.getWeight());
             }
+
             final double newValue = next.getTransferFunction().apply(sum);
             nextNeuron.setValue(newValue);
         }
@@ -223,8 +225,6 @@ public class Layer implements Serializable {
 
             final double cost = costFunction.apply(neuron.getValue(), network.getTargetOutput()[k]);
             neuron.setError(cost);
-
-            System.out.printf("Error between %s and %s is %s\n ", neuron.getValue(), network.getTargetOutput()[k], cost);
 
             // We compare the output of neuron K with target output for neuron K and apply the derivative of the cost function
             final double costDerivative = costFunction.applyDerivative(neuron.getValue(), network.getTargetOutput()[k]);

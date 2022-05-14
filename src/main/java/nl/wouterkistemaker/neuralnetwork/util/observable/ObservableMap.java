@@ -1,4 +1,4 @@
-package nl.wouterkistemaker.neuralnetwork.util;
+package nl.wouterkistemaker.neuralnetwork.util.observable;
 
 import java.util.*;
 

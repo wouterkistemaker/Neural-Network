@@ -1,6 +1,4 @@
-package nl.wouterkistemaker.neuralnetwork.util;
-
-import com.sun.jdi.IntegerValue;
+package nl.wouterkistemaker.neuralnetwork.util.observable;
 
 import java.util.Arrays;
 import java.util.Collection;

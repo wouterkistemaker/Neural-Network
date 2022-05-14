@@ -4,6 +4,7 @@ import nl.wouterkistemaker.neuralnetwork.function.initialization.XavierInitializ
 import nl.wouterkistemaker.neuralnetwork.function.transfer.SigmoidTransfer;
 import nl.wouterkistemaker.neuralnetwork.layer.InputLayer;
 import nl.wouterkistemaker.neuralnetwork.layer.Layer;
+import nl.wouterkistemaker.neuralnetwork.util.NetworkUtils;
 
 import java.util.Arrays;
 
@@ -23,7 +24,8 @@ import java.util.Arrays;
 public class BackpropagationTests {
 
     public static void main(String[] args) {
-        execute1();
+//        execute1();
+        execute2();
     }
 
     private static void execute1() {
@@ -41,13 +43,41 @@ public class BackpropagationTests {
         System.out.printf("Desired prediction for %s is: %s\n", Arrays.toString(input), Arrays.toString(targetOutput));
         System.out.printf("Actual prediction is: %s\n", Arrays.toString(network.predict(input)));
 
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 500; i++) {
             network.train(input, targetOutput, 0.01);
         }
 
         System.out.printf("Actual prediction after backpropagation is: %s\n", Arrays.toString(network.predict(input)));
 
         network.drawErrorCurve();
+    }
+
+    private static void execute2() {
+
+        final InputLayer inputLayer = new InputLayer(2, false, new XavierInitialization(), new SigmoidTransfer(), new MeanSquaredCost());
+        final Layer hiddenLayer = new Layer(15, true, new XavierInitialization(), new SigmoidTransfer(), new MeanSquaredCost());
+        final Layer outputLayer = new Layer(1, false, new XavierInitialization(), new SigmoidTransfer(), new MeanSquaredCost());
+
+        final NeuralNetwork network = new NeuralNetwork(inputLayer, hiddenLayer, outputLayer);
+
+        for (int i = 0; i < 1000; i++) {
+            final double x = NetworkUtils.nextDouble(0, 0.5);
+            final double y = NetworkUtils.nextDouble(0, 0.5);
+
+            final double[] input = new double[]{x,y};
+            final double[] target= new double[]{1.0};
+
+            network.train(input, target, 0.01);
+        }
+
+        final double[] input = new double[]{0.3 , 0.2};
+        final double[] input2 = new double[]{0.8 , 0.6};
+        System.out.printf("Prediction for (%s, %s) is %s", input[0], input[1], Arrays.toString(network.predict(input)));
+        System.out.printf("Prediction for (%s, %s) is %s", input2[0], input2[1], Arrays.toString(network.predict(input2)));
+
+
+        network.drawErrorCurve();
+
     }
 
 }

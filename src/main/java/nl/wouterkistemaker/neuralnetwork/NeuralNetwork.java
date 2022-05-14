@@ -1,5 +1,7 @@
 package nl.wouterkistemaker.neuralnetwork;
 
+import nl.wouterkistemaker.neuralnetwork.data.TrainingSample;
+import nl.wouterkistemaker.neuralnetwork.data.TrainingSet;
 import nl.wouterkistemaker.neuralnetwork.layer.InputLayer;
 import nl.wouterkistemaker.neuralnetwork.layer.Layer;
 import nl.wouterkistemaker.neuralnetwork.neuron.Neuron;
@@ -36,7 +38,8 @@ public final class NeuralNetwork implements Serializable {
     private final Layer outputLayer;
 
     private double[] targetOutput;
-    private List<Double> cost;
+    private final List<Double> trainingCost;
+    private final List<Double> testingLoss;
     private int epochCounter;
 
     private boolean connected; // boolean signalling whether or not the layers are yet interconnected
@@ -71,7 +74,8 @@ public final class NeuralNetwork implements Serializable {
             this.outputLayer = this.layers.get(layers.length - 1);
             this.layers.forEach(l -> l.setNetworkInstance(this));
 
-            this.cost = new LinkedList<>();
+            this.trainingCost = new LinkedList<>();
+            this.testingLoss = new LinkedList<>();
 
             this.connect();
 
@@ -149,10 +153,38 @@ public final class NeuralNetwork implements Serializable {
 
         this.feedforward();
 
-        cost.add(epochCounter++, outputLayer.getCost());
+        trainingCost.add(epochCounter++, outputLayer.getCost());
 
         this.propagateBackwards();
         this.updateWeights(learningRate);
+    }
+
+    public final void train(TrainingSet set, int batch_size, int epochs, double learningRate) {
+        for (int i = 0; i < epochs; i++) {
+            System.out.println("Epoch : " + (i+1));
+
+            set.shuffle();
+            List<TrainingSet> batches = set.extractBatches(batch_size);
+
+            for (int b = 0; b < batches.size(); b++) {
+                final TrainingSet batch = batches.get(b);
+
+                if (batch.getSize() == batch_size) {
+                    for (int j = 0; j < batch_size; j++) {
+                        final TrainingSample sample = batch.getSample(j);
+
+                        final double[] input = sample.getInput();
+                        final double[] target = sample.getTarget();
+
+                        train(input, target, learningRate);
+                    }
+
+                    // calculate cost for each sample and average it
+                }
+
+                System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" + (b+1) + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+            }
+        }
     }
 
     public final double[] predict(double[] input) {
@@ -237,7 +269,7 @@ public final class NeuralNetwork implements Serializable {
     }
 
     public final void drawErrorCurve() {
-        MetricsUtils.drawErrorCurve(cost);
+        MetricsUtils.drawErrorCurve(trainingCost);
     }
 
     @Override

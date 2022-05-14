@@ -9,15 +9,19 @@ import java.util.stream.Stream;
 public final class PixelUtils {
 
     private PixelUtils() {
-        throw new AssertionError("Instantiating Utils class is forbidden.");
+        try {
+            throw new InstantiationException("Util class cannot be instantiated");
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * Retrieves pixels from the given image.
      *
      * @param filePath The path to the image.
-     * @throws IllegalStateException When the image cannot be read.
      * @return The RGB values in a two-dimensional array (X, Y).
+     * @throws IllegalStateException When the image cannot be read.
      */
     public static int[][] getPixels(String filePath) {
         BufferedImage image;
@@ -59,9 +63,9 @@ public final class PixelUtils {
      * Parses the given RGBA value and wraps it into a Pixel object.
      *
      * @param rgba The given RGBA value.
+     * @return The wrapped pixel.
      * @throws IllegalArgumentException When the RGB value is less than {@link Pixel#RGB_MIN } or bigger than {@link Pixel#RGB_MAX}.
      * @throws IllegalArgumentException When the Alpha value is less than {@link Pixel#RGB_MIN} or bigger than {@link Pixel#RGB_MAX}.
-     * @return The wrapped pixel.
      */
     public static Pixel parse(int rgba) {
         final int red = (rgba >> 16) & 0xFF;

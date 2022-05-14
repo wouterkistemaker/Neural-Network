@@ -19,9 +19,18 @@ import java.util.Arrays;
 public class NetworkUtils {
 
     private NetworkUtils() {
+        try {
+            throw new InstantiationException("Util class cannot be instantiated");
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
     }
 
     private static final SecureRandom secureRandom = new SecureRandom();
+
+    public static int nextInt(int bound){
+        return secureRandom.nextInt(bound);
+    }
 
     public static double nextDouble() {
         return secureRandom.nextDouble();
@@ -38,4 +47,5 @@ public class NetworkUtils {
     public static double[] flatten(double[][] array) {
         return Arrays.stream(array).flatMapToDouble(Arrays::stream).toArray();
     }
+
 }

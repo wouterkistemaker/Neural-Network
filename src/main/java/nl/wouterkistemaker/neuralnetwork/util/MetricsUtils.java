@@ -8,6 +8,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 import java.util.List;
 
 /*
@@ -26,22 +27,36 @@ import java.util.List;
 public class MetricsUtils {
 
     public static void drawErrorCurve(List<Double> cost) {
-        XYSeriesCollection collection = new XYSeriesCollection();
+        final XYSeries series = getSeries("Error Curve", cost);
+        setupFrame("Error Curve", series);
+    }
 
-        XYSeries series = new XYSeries("Error Curve");
+    public static void drawLearningCurve(List<Double> trainingCost, List<Double> testingCost) {
+        final XYSeries trainingSeries = getSeries("Training Loss", trainingCost);
+        final XYSeries testingSeries = getSeries("Testing Loss", testingCost);
 
-        for (int i = 0; i < cost.size(); i++) {
-            series.add(i, cost.get(i));
-        }
+        setupFrame("Learning Curve", trainingSeries, testingSeries);
+    }
 
-        collection.addSeries(series);
+    private static void setupFrame(String title, XYSeries... series){
+        final XYSeriesCollection collection = new XYSeriesCollection();
+        Arrays.stream(series).forEach(collection::addSeries);
 
-        final JFreeChart chart = ChartFactory.createXYLineChart("Error Curve", "Epoch", "Cost", collection);
+        final JFreeChart chart = ChartFactory.createXYLineChart(title, "Epoch (n)", "Cost", collection);
         final ChartPanel panel = new ChartPanel(chart);
 
         final JFrame frame = new JFrame();
         frame.setSize(new Dimension(1280, 720));
         frame.add(panel);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setVisible(true);
+    }
+
+    private static XYSeries getSeries(String name, List<Double> input) {
+        XYSeries series = new XYSeries(name);
+        for (int i = 0; i < input.size(); i++) {
+            series.add(i, input.get(i));
+        }
+        return series;
     }
 }

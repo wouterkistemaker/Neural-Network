@@ -1,6 +1,8 @@
 import nl.wouterkistemaker.neuralnetwork.NeuralNetwork;
 import nl.wouterkistemaker.neuralnetwork.function.initialization.XavierInitialization;
+import nl.wouterkistemaker.neuralnetwork.layer.InputLayer;
 import nl.wouterkistemaker.neuralnetwork.layer.Layer;
+import nl.wouterkistemaker.neuralnetwork.layer.OutputLayer;
 import nl.wouterkistemaker.neuralnetwork.neuron.Neuron;
 
 import java.util.concurrent.Executors;
@@ -65,9 +67,9 @@ public class VisualisationTests {
 
     private static void execute2() {
 
-        final Layer input = new Layer(2, false, new XavierInitialization());
+        final Layer input = new InputLayer(2, false, new XavierInitialization());
         final Layer hidden = new Layer(3, true, new XavierInitialization());
-        final Layer output = new Layer(1, false, new XavierInitialization());
+        final Layer output = new OutputLayer(1, false, new XavierInitialization());
         final NeuralNetwork network = new NeuralNetwork(input, hidden, output);
 
         network.visualize();
